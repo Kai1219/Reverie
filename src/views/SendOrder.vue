@@ -1,11 +1,11 @@
 <template>
   <div class="about">
-    <h1>關於我們</h1>
+    <h1>送出訂單</h1>
   </div>
 </template>
 
 <script>
 export default {
-  name: 'AboutView'
+  name: 'SendOrder'
 }
 </script>

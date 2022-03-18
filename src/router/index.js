@@ -1,19 +1,69 @@
 import { createRouter, createWebHashHistory } from 'vue-router'
-import HomeView from '../views/HomeView.vue'
 
 const routes = [
   {
     path: '/',
-    name: 'home',
-    component: HomeView
+    name: 'index',
+    component: () => import('../views/IndexView.vue')
   },
   {
-    path: '/about',
-    name: 'about',
-    // route level code-splitting
-    // this generates a separate chunk (about.[hash].js) for this route
-    // which is lazy-loaded when the route is visited.
-    component: () => import(/* webpackChunkName: "about" */ '../views/AboutView.vue')
+    path: '/f',
+    name: 'front',
+    component: () => import('../views/FrontView.vue'),
+    children: [
+      {
+        path: 'products',
+        name: 'products',
+        component: () => import('../views/ProductsView.vue')
+      },
+      {
+        path: 'product',
+        name: 'product',
+        component: () => import('../views/ProductView.vue')
+      },
+      {
+        path: 'about',
+        name: 'about',
+        component: () => import('../views/AboutView.vue')
+      },
+      {
+        path: 'service',
+        name: 'service',
+        component: () => import('../views/ServiceView')
+      },
+      {
+        path: 'cart',
+        name: 'cart',
+        component: () => import('../views/CartView.vue')
+      }
+    ]
+  },
+  {
+    path: '/login',
+    name: 'Login',
+    component: () => import('../views/LoginView.vue')
+  },
+  {
+    path: '/admin',
+    name: 'Admin',
+    component: () => import('../views/Dashboard/DashboardView.vue'),
+    children: [
+      {
+        path: 'adminproducts',
+        name: 'adminproducts',
+        component: () => import('../views/Dashboard/AdminProducts.vue')
+      },
+      {
+        path: 'order',
+        name: 'order',
+        component: () => import('../views/Dashboard/OrderView.vue')
+      },
+      {
+        path: 'coupon',
+        name: 'coupon',
+        component: () => import('../views/Dashboard/AdminCoupon.vue')
+      }
+    ]
   }
 ]
 
