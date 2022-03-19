@@ -1,11 +1,13 @@
 <template>
-  <div class="about">
-    <h1>關於我們</h1>
-  </div>
+  <h1>關於我們</h1>
 </template>
 
 <script>
 export default {
-  name: 'AboutView'
+  name: 'AboutView',
+  data () {
+    return {
+    }
+  }
 }
 </script>

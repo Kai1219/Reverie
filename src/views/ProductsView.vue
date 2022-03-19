@@ -6,7 +6,7 @@
     <section class="container p-5">
       <div class="row gx-5">
         <ProductsList></ProductsList>
-        <div class="products-items col-sm-8">
+        <div class="products-items col-sm-9">
           <div class="products">
             <div class="row row-cols-1 row-cols-lg-3 g-lg-5">
               <div class="col align-items-center mb-5" v-for="product in products" :key="product.id">
@@ -19,37 +19,37 @@
                     />
                   </div>
                   </router-link>
-                  <div class="card-body">
-                    <h5 class="card-title text-center mb-3">{{product.title}}</h5>
+                  <div class="card-body pb-0">
+                    <h5 class="card-title text-center">{{product.title}}</h5>
                   </div>
-                  <div class="price">
-                    <p class="text-center">
-                      NT${{product.price}}&nbsp;
-                      </p>
-                       <span class="text-decoration-line-through fw-light">NT${{product.origin_price}}</span>
-                    <button href="#" class="btn btn-primary">加入購物車</button>
-                  </div>
+                  <div class="price text-center">
+                <div v-if="product.origin_price===product.price"><span class="h5">NT${{ product.price }}</span></div>
+                <div v-else><span class="h5">NT${{ product.price }}&nbsp;</span>
+                <span class="text-decoration-line-through fw-light"
+                  >NT${{ product.origin_price }}</span
+                ></div>
+                <div class="btn-group mt-2">
+                  <button
+                    type="button"
+                    class="btn text-dark"
+                    @click="addToFavorite"
+                  ><i class="bi bi-heart"></i>
+                    加入追蹤清單
+                  </button>
+                  <button
+                    type="button"
+                    class="btn btn-primary "
+                    @click="addToCart"
+                  >
+                    加入購物車
+                  </button>
+                </div>
+              </div>
                 </div>
               </div>
             </div>
           </div>
-          <nav aria-label="Page navigation example">
-            <ul class="pagination justify-content-center">
-              <li class="page-item">
-                <a class="page-link" href="#" aria-label="Previous">
-                  <span aria-hidden="true">&laquo;</span>
-                </a>
-              </li>
-              <li class="page-item"><a class="page-link" href="#">1</a></li>
-              <li class="page-item"><a class="page-link" href="#">2</a></li>
-              <li class="page-item"><a class="page-link" href="#">3</a></li>
-              <li class="page-item">
-                <a class="page-link" href="#" aria-label="Next">
-                  <span aria-hidden="true">&raquo;</span>
-                </a>
-              </li>
-            </ul>
-          </nav>
+          <Pagination :pages="pagination" @emitPages="getOrders"></Pagination>
         </div>
       </div>
     </section>
@@ -71,6 +71,7 @@
 
 <script>
 import ProductsList from '@/components/ProductsList.vue'
+import Pagination from '@/components/PaginationView.vue'
 export default {
   name: 'ProductsView',
   data () {
@@ -80,7 +81,8 @@ export default {
     }
   },
   components: {
-    ProductsList
+    ProductsList,
+    Pagination
   },
   methods: {
     getProducts (page = 1) {

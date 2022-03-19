@@ -1,12 +1,12 @@
 <template>
   <nav class="navbar navbar-expand-lg navbar-light bg-light sticky-top">
-    <div class="container-fluid">
+    <div class="container">
       <div class="sr-only">
         <h1>Reverie</h1>
       </div>
-      <a class="navbar-brand me-2" href="/">
-        <img src="@/assets/img/logo.svg" alt="Reverie" class="logo-img" />
-      </a>
+      <router-link class="navbar-brand me-2" :to="`/`"
+        ><img src="@/assets/img/logo.svg" alt="Reverie" class="logo-img"
+      /></router-link>
       <button
         class="navbar-toggler"
         type="button"
@@ -25,7 +25,7 @@
               to="/f/products"
               class="nav-link active"
               aria-current="page"
-              >產品列表</router-link
+              >甜蜜食光</router-link
             >
           </li>
           <li class="nav-item mx-3 my-auto">

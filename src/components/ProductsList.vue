@@ -1,5 +1,5 @@
 <template>
-  <div class="col-sm-4 list-group">
+  <div class="col-sm-3 list-group">
     <a
       href="#"
       class="list-group-item list-group-item-action active"
