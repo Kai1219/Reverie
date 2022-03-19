@@ -12,13 +12,13 @@
 <style lang="scss">
 /*main*/
 main {
-  /*padding-bottom: 30vh;*/
+  padding-bottom: 30vh;
 }
 /*footer*/
 footer {
   background: #eee;
   height: 20vh; /*設定footer本身高度*/
-  /*margin-top: -20vh;*/ /*隨footer高度需做調整*/
+  margin-top: -20vh; /*隨footer高度需做調整*/
   display: flex;
   flex-direction: column;
   justify-content: center;
