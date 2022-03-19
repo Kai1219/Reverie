@@ -156,6 +156,8 @@
 </template>
 
 <style lang="scss">
+.btn {
+}
 .hmoepage {
   position: relative;
 }
