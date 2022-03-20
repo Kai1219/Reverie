@@ -9,47 +9,53 @@
         <div class="products-items col-sm-9">
           <div class="products">
             <div class="row row-cols-1 row-cols-lg-3 g-lg-5">
-              <div class="col align-items-center mb-5" v-for="product in products" :key="product.id">
+              <div
+                class="col align-items-center mb-5"
+                v-for="product in products"
+                :key="product.id"
+              >
                 <div class="card-product" style="">
                   <router-link :to="`/f/product/${product.id}`">
-                  <div class="pic ratio ratio-1x1">
-                    <img
-                      :src="product.imageUrl"
-                      alt=""
-                    />
-                  </div>
+                    <div class="pic ratio ratio-1x1">
+                      <img :src="product.imageUrl" alt="" />
+                    </div>
                   </router-link>
                   <div class="card-body pb-0">
-                    <h5 class="card-title text-center">{{product.title}}</h5>
+                    <h5 class="card-title text-center">{{ product.title }}</h5>
                   </div>
                   <div class="price text-center">
-                <div v-if="product.origin_price===product.price"><span class="h5">NT${{ product.price }}</span></div>
-                <div v-else><span class="h5">NT${{ product.price }}&nbsp;</span>
-                <span class="text-decoration-line-through fw-light"
-                  >NT${{ product.origin_price }}</span
-                ></div>
-                <div class="btn-group mt-2">
-                  <button
-                    type="button"
-                    class="btn text-dark"
-                    @click="addToFavorite"
-                  ><i class="bi bi-heart"></i>
-                    加入追蹤清單
-                  </button>
-                  <button
-                    type="button"
-                    class="btn btn-primary "
-                    @click="addToCart"
-                  >
-                    加入購物車
-                  </button>
-                </div>
-              </div>
+                    <div v-if="product.origin_price === product.price">
+                      <span class="h5">NT${{ product.price }}</span>
+                    </div>
+                    <div v-else>
+                      <span class="h5">NT${{ product.price }}&nbsp;</span>
+                      <span class="text-decoration-line-through fw-light"
+                        >NT${{ product.origin_price }}</span
+                      >
+                    </div>
+                    <div class="btn-group mt-2">
+                      <button
+                        type="button"
+                        class="btn text-dark"
+                        @click="addToFavorite"
+                      >
+                        <i class="bi bi-heart"></i>
+                        加入追蹤清單
+                      </button>
+                      <button
+                        type="button"
+                        class="btn btn-primary"
+                        @click="addToCart(product.id)"
+                      >
+                        加入購物車
+                      </button>
+                    </div>
+                  </div>
                 </div>
               </div>
             </div>
           </div>
-          <Pagination :pages="pagination" @emitPages="getOrders"></Pagination>
+          <Pagination :pages="pagination"></Pagination>
         </div>
       </div>
     </section>
@@ -65,7 +71,6 @@
   background-position: center center;
 }
 @media screen and (min-width: 576px) {
-
 }
 </style>
 
@@ -77,7 +82,8 @@ export default {
   data () {
     return {
       products: [],
-      pagination: {}
+      pagination: {},
+      isLoadingItem: ''
     }
   },
   components: {
@@ -96,8 +102,28 @@ export default {
         .catch((error) => {
           alert(error.data.message)
         })
+    },
+    addToCart (id, qty = 1) {
+      const api = `${process.env.VUE_APP_API}/api/${process.env.VUE_APP_PATH}/cart`
+      const data = {
+        product_id: id,
+        qty
+      }
+      this.isLoadingItem = id
+      this.$http
+        .post(api, { data })
+        .then((res) => {
+          alert(res.data.message)
+          this.getCart()
+          // emitter.emit("get-Cart");
+        })
+        .catch((error) => {
+          alert(error.data.message)
+        })
+      this.isLoadingItem = ''
     }
   },
+
   mounted () {
     this.getProducts()
   }

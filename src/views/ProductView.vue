@@ -9,18 +9,18 @@
         <div class="products-items col-sm-9">
           <div class="row">
             <nav aria-label="breadcrumb">
-                <ol class="breadcrumb">
-                  <li class="breadcrumb-item">
-                    <router-link :to="`/`">首頁</router-link>
-                  </li>
-                  <li class="breadcrumb-item">
-                    <router-link to="/f/products">甜蜜食光</router-link>
-                  </li>
-                  <li class="breadcrumb-item active" aria-current="page">
-                    {{ product.category }}
-                  </li>
-                </ol>
-              </nav>
+              <ol class="breadcrumb">
+                <li class="breadcrumb-item">
+                  <router-link :to="`/`">首頁</router-link>
+                </li>
+                <li class="breadcrumb-item">
+                  <router-link to="/f/products">甜蜜食光</router-link>
+                </li>
+                <li class="breadcrumb-item active" aria-current="page">
+                  {{ product.category }}
+                </li>
+              </ol>
+            </nav>
             <div class="col-sm-6">
               <ProductSwiper :swiperProduct="product"></ProductSwiper>
             </div>
@@ -30,11 +30,15 @@
               <hr />
               <p>{{ product.content }}</p>
               <div class="price my-5">
-                <div v-if="product.origin_price===product.price"><span class="h5">NT${{ product.price }}</span></div>
-                <div v-else><span class="h5">NT${{ product.price }}&nbsp;</span>
-                <span class="text-decoration-line-through fw-light"
-                  >NT${{ product.origin_price }}</span
-                ></div>
+                <div v-if="product.origin_price === product.price">
+                  <span class="h5">NT${{ product.price }}</span>
+                </div>
+                <div v-else>
+                  <span class="h5">NT${{ product.price }}&nbsp;</span>
+                  <span class="text-decoration-line-through fw-light"
+                    >NT${{ product.origin_price }}</span
+                  >
+                </div>
                 <div class="input-group my-3">
                   <input
                     type="number"
@@ -44,19 +48,20 @@
                   />
                   <button
                     type="button"
-                    class="btn btn-primary "
-                    @click="addToCart"
+                    class="btn btn-primary"
+                    @click="addToCart(product.id)"
                   >
                     加入購物車
                   </button>
                 </div>
                 <button
-                    type="button"
-                    class="btn text-dark my-3"
-                    @click="addToFavorite"
-                  ><i class="bi bi-heart"></i>
-                    加入追蹤清單
-                  </button>
+                  type="button"
+                  class="btn text-dark my-3"
+                  @click="addToFavorite"
+                >
+                  <i class="bi bi-heart"></i>
+                  加入追蹤清單
+                </button>
               </div>
             </div>
           </div>
@@ -96,6 +101,25 @@ export default {
         .catch((error) => {
           alert(error.data.message)
         })
+    },
+    addToCart (id) {
+      const api = `${process.env.VUE_APP_API}/api/${process.env.VUE_APP_PATH}/cart`
+      const data = {
+        product_id: this.product.id,
+        qty: this.qty
+      }
+      this.isLoadingItem = id
+      this.$http
+        .post(api, { data })
+        .then((res) => {
+          alert(res.data.message)
+          this.getCart()
+          // emitter.emit("get-Cart");
+        })
+        .catch((error) => {
+          alert(error.data.message)
+        })
+      this.isLoadingItem = ''
     }
   },
   mounted () {

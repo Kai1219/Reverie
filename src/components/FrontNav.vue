@@ -1,5 +1,5 @@
 <template>
-  <nav class="navbar navbar-expand-lg navbar-light bg-light sticky-top">
+  <nav class="navbar navbar-expand-lg navbar-light bg-light sticky-top shadow-sm">
     <div class="container">
       <div class="sr-only">
         <h1>Reverie</h1>
@@ -25,7 +25,7 @@
               to="/f/products"
               class="nav-link active"
               aria-current="page"
-              >甜蜜食光</router-link
+              >商品一覽</router-link
             >
           </li>
           <li class="nav-item mx-3 my-auto">

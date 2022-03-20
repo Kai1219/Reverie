@@ -9,12 +9,13 @@
             class="w-100 h-100"
           />
         </div>
-        <div class="text w-100 h-100 position-absolute top-0 start-0">
-          <p class="fs-1">Reverie</p>
-          <p class="fs-5 mb-5">
-            使用寬度和高度通用類別，可以輕鬆地將一個元素加寬或增高。
+        <div class=" text-center w-100 h-100 ">
+          <div class="text shadow-sm m-0 position-absolute top-0 start-0 bottom-0 end-0">
+            <h3 class="mt-5">白日夢</h3>
+            <p class="mb-4">被生活壓的喘不過氣時，來這裡，做個白日夢
           </p>
           <button type="button" class="btn btn-primary">查看更多</button>
+          </div>
         </div>
       </div>
     </section>
@@ -156,8 +157,6 @@
 </template>
 
 <style lang="scss">
-.btn {
-}
 .hmoepage {
   position: relative;
 }
@@ -172,13 +171,22 @@
 }
 
 .hmoepage .text {
-  background-color: #fff2;
-  padding: 10% 10%;
+  background-color: #fff9;
+  border: 20px solid #FFF;
+  padding: 5%;
+ /* position: absolute;
+  width: 90%;
+  height: 90%;
+  left: 0%;
+  right: 0%;
+  margin: 1rem auto;
+  border: 10px solid #FFF;*/
 }
 
 @media screen and (min-width: 576px) {
   .hmoepage .text {
-    padding: 15% 10%;
+     padding: 15%;
+
   }
 }
 
