@@ -1,6 +1,6 @@
 <template>
   <main class="container">
-    <div class="cart-progress my-5">
+    <section class="cart-progress my-5">
       <ol class="progress-list container row g-0">
         <li class="col-4 active">
           <span class="step mb-2 text-white">1</span> 購物車
@@ -12,8 +12,8 @@
           <span class="step mb-2 text-white">3</span>訂單確認
         </li>
       </ol>
-    </div>
-    <div class="cart px-2 p-sm-5 pb-sm-2">
+    </section>
+    <section class="cart px-2 p-sm-5 pb-sm-2">
       <table class="table align-middle">
         <div class="thead row">
           <div class="col-11 col-md-5">商品資料</div>
@@ -103,13 +103,21 @@
           </form>
         </div>
         <div class="d-flex justify-content-between align-items-center mt-5">
-          <button type="button" class="btn btn-delete-all" @click="delCartAll">清空購物車</button>
+          <button type="button" class="btn btn-delete-all" @click="delCartAll">
+            清空購物車
+          </button>
           <p class="fw-bold fs-4">合計:NT${{ cartData.final_total }}</p>
         </div>
       </div>
-    </div>
+    </section>
     <div class="d-flex justify-content-center mt-5">
-<router-link to="/f/sendorder" class="btn btn-primary w-25 h-25 fs-4">前往結帳</router-link>
+      <button
+        type="botton"
+        class="btn btn-primary w-25 h-25 fs-4"
+        @click="goToSendOrder"
+      >
+        前往結帳
+      </button>
     </div>
   </main>
 </template>
@@ -185,11 +193,20 @@ export default {
   name: 'CartView',
   data () {
     return {
-      cartData: {},
+      cartData: {
+        carts: []
+      },
       isLoadingItem: ''
     }
   },
   methods: {
+    goToSendOrder () {
+      if (this.cartData.carts.length <= 0) {
+        alert('請加入商品')
+      } else {
+        this.$router.push('/f/sendorder')
+      }
+    },
     getCart () {
       const api = `${process.env.VUE_APP_API}/api/${process.env.VUE_APP_PATH}/cart`
       this.$http(api)
@@ -221,7 +238,8 @@ export default {
     },
     delCartItem (item) {
       const api = `${process.env.VUE_APP_API}/api/${process.env.VUE_APP_PATH}/cart/${item.id}`
-      this.$http.delete(api)
+      this.$http
+        .delete(api)
         .then(() => {
           this.getCart()
         })
@@ -230,14 +248,19 @@ export default {
         })
     },
     delCartAll () {
-      const api = `${process.env.VUE_APP_API}/api/${process.env.VUE_APP_PATH}/carts`
-      this.$http.delete(api)
-        .then(() => {
-          this.getCart()
-        })
-        .catch((error) => {
-          alert(error.data.message)
-        })
+      if (this.cartData.carts.length <= 0) {
+        alert('請加入商品')
+      } else {
+        const api = `${process.env.VUE_APP_API}/api/${process.env.VUE_APP_PATH}/carts`
+        this.$http
+          .delete(api)
+          .then(() => {
+            this.getCart()
+          })
+          .catch((error) => {
+            alert(error.data.message)
+          })
+      }
     }
   },
   mounted () {
