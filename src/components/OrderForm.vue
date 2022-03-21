@@ -125,11 +125,15 @@ export default {
             // this.$emit('reset-cart')
             // this.$refs.form.resetForm()
             // this.orderId = res.data.orderId
-            this.$router.push('/f/paid')
-            // this.$router.push({ name: '/f/paid', params: { Id: `${this.orderId}` } })
+            this.orderId = res.data.orderId
+            this.$router.push({
+              name: 'paid',
+              params: { Id: `${this.orderId}` }
+            })
+            this.$refs.form.resetForm()
           })
-          .catch((error) => {
-            alert(error.data.message)
+          .catch(() => {
+            // alert(error.data.message)
           })
       }
     },

@@ -102,7 +102,7 @@
         </div>
       </div>
     </section>
-    <OrderForm :cartData="cartData" @reset-cart="delCartAll"></OrderForm>
+    <OrderForm :cartData="cartData"></OrderForm>
   </main>
 </template>
 
@@ -166,9 +166,6 @@
   color: #839ea9;
 }
 
-.accordion-item button {
-  /*height: 500px;*/
-}
 </style>
 
 <script>
@@ -192,17 +189,6 @@ export default {
         .then((res) => {
           this.cartData = res.data.data
           console.log(this.cartData)
-        })
-        .catch((error) => {
-          alert(error.data.message)
-        })
-    },
-    delCartAll () {
-      const api = `${process.env.VUE_APP_API}/api/${process.env.VUE_APP_PATH}/carts`
-      this.$http
-        .delete(api)
-        .then(() => {
-          this.getCart()
         })
         .catch((error) => {
           alert(error.data.message)

@@ -1,4 +1,14 @@
 <template>
+    <loading
+      v-model:active="isLoading"
+      :can-cancel="true"
+      :on-cancel="onCancel"
+      :is-full-page="fullPage">
+      <div class="spinner-grow" style="width: 3rem; height: 3rem;" role="status">
+  <span class="visually-hidden">Loading...</span>
+</div>
+    </loading>
+
   <header>
     <section class="section-hmoepage">
       <div class="hmoepage position-relative">
@@ -9,12 +19,13 @@
             class="w-100 h-100"
           />
         </div>
-        <div class=" text-center w-100 h-100 ">
-          <div class="text shadow-sm m-0 position-absolute top-0 start-0 bottom-0 end-0">
+        <div class="text-center w-100 h-100">
+          <div
+            class="text shadow-sm m-0 position-absolute top-0 start-0 bottom-0 end-0"
+          >
             <h3 class="mt-5">白日夢</h3>
-            <p class="mb-4">被生活壓的喘不過氣時，來這裡，做個白日夢
-          </p>
-          <button type="button" class="btn btn-primary">查看更多</button>
+            <p class="mb-4">被生活壓的喘不過氣時，來這裡，做個白日夢</p>
+            <button type="button" class="btn btn-primary">查看更多</button>
           </div>
         </div>
       </div>
@@ -28,75 +39,47 @@
       </div>
       <div class="products container px-5">
         <div class="row row-cols-1 row-cols-lg-4 g-lg-5">
-          <div class="col align-items-center mb-5">
+          <div
+            class="col-6 align-items-center mb-5"
+            v-for="product in products.slice(0, 4)"
+            :key="product.id"
+          >
             <div class="card-product" style="">
-              <div class="pic ratio ratio-1x1">
-                <img
-                  src="https://images.unsplash.com/photo-1551024506-0bccd828d307?ixlib=rb-1.2.1&ixid=MnwxMjA3fDB8MHxzZWFyY2h8Mnx8ZGVzc2VydHxlbnwwfHwwfHw%3D&auto=format&fit=crop&w=500&q=60"
-                  class="card-img-top"
-                  alt=""
-                />
+              <router-link :to="`/f/product/${product.id}`">
+                <div class="pic ratio ratio-1x1">
+                  <img :src="product.imageUrl" alt="" />
+                </div>
+              </router-link>
+              <div class="card-body pb-0">
+                <h5 class="card-title text-center">{{ product.title }}</h5>
               </div>
-              <div class="card-body">
-                <h5 class="card-title text-center mb-3">Card title</h5>
-              </div>
-              <div class="price">
-                <p class="fs-5 text-center">NT.150元</p>
-                <button href="#" class="btn btn-primary">加入購物車</button>
-              </div>
-            </div>
-          </div>
-          <div class="col align-items-center mb-5">
-            <div class="card-product" style="">
-              <div class="pic ratio ratio-1x1">
-                <img
-                  src="https://images.unsplash.com/photo-1551024506-0bccd828d307?ixlib=rb-1.2.1&ixid=MnwxMjA3fDB8MHxzZWFyY2h8Mnx8ZGVzc2VydHxlbnwwfHwwfHw%3D&auto=format&fit=crop&w=500&q=60"
-                  class="card-img-top"
-                  alt=""
-                />
-              </div>
-              <div class="card-body">
-                <h5 class="card-title text-center mb-3">Card title</h5>
-              </div>
-              <div class="price">
-                <p class="fs-5 text-center">NT.150元</p>
-                <button href="#" class="btn btn-primary">加入購物車</button>
-              </div>
-            </div>
-          </div>
-          <div class="col align-items-center mb-5">
-            <div class="card-product" style="">
-              <div class="pic ratio ratio-1x1">
-                <img
-                  src="https://images.unsplash.com/photo-1551024506-0bccd828d307?ixlib=rb-1.2.1&ixid=MnwxMjA3fDB8MHxzZWFyY2h8Mnx8ZGVzc2VydHxlbnwwfHwwfHw%3D&auto=format&fit=crop&w=500&q=60"
-                  class="card-img-top"
-                  alt=""
-                />
-              </div>
-              <div class="card-body">
-                <h5 class="card-title text-center mb-3">Card title</h5>
-              </div>
-              <div class="price">
-                <p class="fs-5 text-center">NT.150元</p>
-                <button href="#" class="btn btn-primary">加入購物車</button>
-              </div>
-            </div>
-          </div>
-          <div class="col align-items-center mb-5">
-            <div class="card-product" style="">
-              <div class="pic ratio ratio-1x1">
-                <img
-                  src="https://images.unsplash.com/photo-1551024506-0bccd828d307?ixlib=rb-1.2.1&ixid=MnwxMjA3fDB8MHxzZWFyY2h8Mnx8ZGVzc2VydHxlbnwwfHwwfHw%3D&auto=format&fit=crop&w=500&q=60"
-                  class="card-img-top"
-                  alt=""
-                />
-              </div>
-              <div class="card-body">
-                <h5 class="card-title text-center mb-3">Card title</h5>
-              </div>
-              <div class="price">
-                <p class="fs-5 text-center">NT.150元</p>
-                <button href="#" class="btn btn-primary">加入購物車</button>
+              <div class="price text-center">
+                <div v-if="product.origin_price === product.price">
+                  <h5 class="">NT${{ product.price }}</h5>
+                </div>
+                <div v-else>
+                  <h5 class="">NT${{ product.price }}&nbsp;</h5>
+                  <p class="text-decoration-line-through fw-light">
+                    NT${{ product.origin_price }}
+                  </p>
+                </div>
+                <div class="btn-group mt-2">
+                  <button
+                    type="button"
+                    class="btn text-dark"
+                    @click="addToFavorite"
+                  >
+                    <i class="bi bi-heart"></i>
+                    加入追蹤清單
+                  </button>
+                  <button
+                    type="button"
+                    class="btn btn-primary"
+                    @click="addToCart(product.id)"
+                  >
+                    加入購物車
+                  </button>
+                </div>
               </div>
             </div>
           </div>
@@ -172,9 +155,8 @@
 
 .hmoepage .text {
   background-color: #fff9;
-  border: 20px solid #FFF;
   padding: 5%;
- /* position: absolute;
+  /* position: absolute;
   width: 90%;
   height: 90%;
   left: 0%;
@@ -185,8 +167,7 @@
 
 @media screen and (min-width: 576px) {
   .hmoepage .text {
-     padding: 15%;
-
+    padding: 15%;
   }
 }
 
@@ -197,8 +178,6 @@
   object-fit: cover;
 }
 .products .price {
-  display: flex;
-  border: 1px solid #aaa;
   align-items: center;
 }
 .products p {
@@ -266,14 +245,41 @@ h2.title sapn:after {
 <script>
 import FrontNav from '@/components/FrontNav.vue'
 import Footer from '@/components/FooterView.vue'
+import Loading from 'vue-loading-overlay'
+import 'vue-loading-overlay/dist/vue-loading.css'
+
 export default {
   name: 'IndexView',
   data () {
-    return {}
+    return {
+      products: [],
+      isLoading: false,
+      fullPage: true
+    }
   },
   components: {
     FrontNav,
-    Footer
+    Footer,
+    Loading
+  },
+  methods: {
+    getProducts () {
+      this.isLoading = true
+      const api = `${process.env.VUE_APP_API}/api/${process.env.VUE_APP_PATH}/products/all`
+      this.$http(api)
+        .then((res) => {
+          this.products = res.data.products
+        })
+        .catch(() => {
+          alert('請重新整理頁面')
+        })
+      setTimeout(() => {
+        this.isLoading = false
+      }, 2000)
+    }
+  },
+  mounted () {
+    this.getProducts()
   }
 }
 </script>

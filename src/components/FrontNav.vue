@@ -28,10 +28,10 @@
               >商品一覽</router-link
             >
           </li>
-          <li class="nav-item mx-3 my-auto">
+          <li class="nav-item mx-3 my-auto d-none">
             <router-link to="/f/about" class="nav-link">關於我們</router-link>
           </li>
-          <li class="nav-item mx-3 my-auto">
+          <li class="nav-item mx-3 my-auto d-none">
             <router-link to="/f/service" class="nav-link">常見問題</router-link>
           </li>
           <li class="nav-item mx-3 my-auto">

@@ -14,16 +14,121 @@
       </ol>
     </section>
     <section class="">
-      <div class="thank-text p-5">
+      <div class="thank-text p-5 d-flex flex-column align-items-center">
         <h2>訂購完成!!</h2>
         <p>
-          {{}}先生/小姐，感謝您的購買，Reverie白日夢會繼續努力推出更美味的甜點!
+          {{
+            orderData.user.name
+          }}先生/小姐，感謝您的購買，Reverie白日夢會繼續努力推出更美味的甜點!
         </p>
-        <p>以下為您訂購資訊:</p>
+        <p>以下為您訂購資訊</p>
+
+        <span v-if="orderData.is_paid"
+          ><router-link to="/" class="btn btn-primary"
+            >回到首頁</router-link
+          ></span
+        >
+        <span v-else
+          ><button class="btn btn-primary" @click="goPaid">
+            確定付款
+          </button></span
+        >
       </div>
-      <div class="row">
-        <div class="cart col"></div>
-        <div class="user col"></div>
+    </section>
+    <section class="mt-5">
+      <div class="container px-4">
+        <div class="row gx-5">
+          <div class="col">
+            <div class="order bg-light">
+              <table class="table caption-top">
+                <caption class="fs-5 bg-primary mb-2 px-3 text-white">
+                  訂購商品
+                </caption>
+                <thead class="d-none d-lg-block d-xl-lg-block">
+                  <tr class="d-flex px-5 row">
+                    <th scope="col" class="col-12 col-lg-8">商品資料</th>
+                    <th scope="col" class="col-6 col-lg-2">數量</th>
+                    <th scope="col" class="col-6 col-lg-2">小計</th>
+                  </tr>
+                </thead>
+                <tbody>
+                  <tr
+                    class="d-flex px-5 row"
+                    v-for="item in orderData.products"
+                    :key="item.id"
+                  >
+                    <th scope="row" class="col-12 col-lg-8 row">
+                      <img
+                        :src="item.product.imageUrl"
+                        alt=""
+                        class="w-50 col"
+                      />
+                      <p class="d-inline-block col my-auto text-center">
+                        {{ item.product.title }}
+                      </p>
+                    </th>
+                    <td class="col-6 col-lg-2 row">
+                      <p>{{ item.qty }}{{ item.product.unit }}</p>
+                    </td>
+                    <td class="col-6 col-lg-2 row">
+                      <p>NT${{ item.total }}元</p>
+                    </td>
+                  </tr>
+                </tbody>
+              </table>
+            </div>
+          </div>
+          <div class="col">
+            <div class="order bg-light">
+              <table class="table caption-top">
+                <caption class="fs-5 bg-primary mb-2 px-3 text-white">
+                  顧客資訊
+                </caption>
+                <tbody>
+                  <tr class="d-flex px-5">
+                    <th scope="row" class="col-6 col-lg-3 text-center">
+                      訂購日期
+                    </th>
+                    <td class="col-6 col-lg-9">{{ orderData.create_at }}</td>
+                  </tr>
+                  <tr class="d-flex px-5">
+                    <th scope="row" class="col-6 col-lg-3 text-center">姓名</th>
+                    <td class="col-6 col-lg-9">{{ orderData.user.name }}</td>
+                  </tr>
+                  <tr class="d-flex px-5">
+                    <th scope="row" class="col-6 col-lg-3 text-center">電話</th>
+                    <td class="col-6 col-lg-9">{{ orderData.user.tel }}</td>
+                  </tr>
+                  <tr class="d-flex px-5">
+                    <th scope="row" class="col-6 col-lg-3 text-center">
+                      Email
+                    </th>
+                    <td class="col-6 col-lg-9">{{ orderData.user.email }}</td>
+                  </tr>
+                  <tr class="d-flex px-5">
+                    <th scope="row" class="col-6 col-lg-3 text-center">地址</th>
+                    <td class="col-6 col-lg-9">{{ orderData.user.address }}</td>
+                  </tr>
+                  <tr class="d-flex px-5">
+                    <th scope="row" class="col-6 col-lg-3 text-center">留言</th>
+                    <td class="col-6 col-lg-9">{{ orderData.message }}</td>
+                  </tr>
+                  <tr class="d-flex px-5">
+                    <th scope="row" class="col-6 col-lg-3 text-center">
+                      付款狀態
+                    </th>
+                    <td class="col-6 col-lg-9">
+                      <span v-if="orderData.is_paid" class="text-success"
+                        >已付款</span
+                      >
+                      <span v-else class="text-danger">尚未付款</span>
+                    </td>
+                  </tr>
+                </tbody>
+              </table>
+            </div>
+          </div>
+        </div>
       </div>
     </section>
   </main>
@@ -65,10 +170,19 @@
 .progress-list li.active ~ li:before {
   background-color: #d5d5d5;
 }
+
+/* table */
+.table > :not(:first-child) {
+  border-top: none;
+}
+
+.order {
+  border: 1px solid #839ea9;
+}
+
 .thank-text {
-  background-color: #fff;
+  background-color: #aac1ca55;
   box-shadow: 0 0 1rem #bababa;
-  border: 10px solid #aac1ca;
 }
 </style>
 
@@ -77,47 +191,57 @@ export default {
   name: 'SendOrder',
   data () {
     return {
-      cartData: {},
-      orderData: {},
-      orderform: {
+      orderData: {
+        create_at: '',
+        id: '',
+        is_paid: false,
+        message: '',
+        products: [],
+        total: '',
         user: {
-          name: '',
+          address: '',
           email: '',
-          tel: '',
-          address: ''
-        },
-        message: ''
-      },
-      orderId: ''
+          name: '',
+          tel: ''
+        }
+      }
     }
   },
   methods: {
-    getCart () {
-      const api = `${process.env.VUE_APP_API}/api/${process.env.VUE_APP_PATH}/cart`
-      this.$http(api)
-        .then((res) => {
-          this.cartData = res.data.data
-          console.log(this.cartData)
-        })
-        .catch((error) => {
-          alert(error.data.message)
-        })
-    },
     getOrder () {
-      const { id } = this.$route.params
-      /* const api = `${process.env.VUE_APP_API}/api/${process.env.VUE_APP_PATH}/order/${orderId}`
-      this.$http(api)
-        .then((res) => {
-          console.log(orderId)
-          this.cartData = res.data.order.products
-          this.orderData = res.data.order
-          console.log(this.orderData)
-          console.log(this.cartData)
-        })
-        .catch((error) => {
-          alert(error.data.message)
-        }) */
-      console.log(id)
+      const { Id } = this.$route.params
+      if (Id) {
+        const api = `${process.env.VUE_APP_API}/api/${process.env.VUE_APP_PATH}/order/${Id}`
+        this.$http(api)
+          .then((res) => {
+            this.orderData = res.data.order
+            console.log('orderData', this.orderData)
+          })
+          .catch(() => {
+            // alert(error.data.message)
+          })
+      }
+    },
+    goPaid () {
+      if (this.orderData.id) {
+        const api = `${process.env.VUE_APP_API}/api/${process.env.VUE_APP_PATH}/pay/${this.orderData.id}`
+        this.$http
+          .post(api)
+          .then((res) => {
+            console.log('res', res.data.message)
+            console.log('this.orderData', this.orderData)
+            this.$router.push({
+              name: 'paid',
+              params: { Id: `${this.orderData.id}` }
+            })
+          })
+          .catch((error) => {
+            console.log('error', error)
+            alert('請重新付款')
+          })
+      } else {
+        alert('請選購商品')
+      }
     }
   },
   mounted () {
