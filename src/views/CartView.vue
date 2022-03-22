@@ -189,6 +189,7 @@
 </style>
 
 <script>
+import emitter from '@/libs/emitter'
 export default {
   name: 'CartView',
   data () {
@@ -204,7 +205,7 @@ export default {
       if (this.cartData.carts.length <= 0) {
         alert('請加入商品')
       } else {
-        this.$router.push('/f/sendorder')
+        this.$router.push('/sendorder')
       }
     },
     getCart () {
@@ -242,6 +243,7 @@ export default {
         .delete(api)
         .then(() => {
           this.getCart()
+          emitter.emit('get-cart')
         })
         .catch((error) => {
           alert(error.data.message)
@@ -256,6 +258,7 @@ export default {
           .delete(api)
           .then(() => {
             this.getCart()
+            emitter.emit('get-cart')
           })
           .catch((error) => {
             alert(error.data.message)

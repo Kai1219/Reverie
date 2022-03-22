@@ -1,13 +1,5 @@
 <template>
-    <loading
-      v-model:active="isLoading"
-      :can-cancel="true"
-      :on-cancel="onCancel"
-      :is-full-page="fullPage">
-      <div class="spinner-grow" style="width: 3rem; height: 3rem;" role="status">
-  <span class="visually-hidden">Loading...</span>
-</div>
-    </loading>
+  <loading v-model:active="isLoading" :is-full-page="fullPage"> </loading>
 
   <header>
     <section class="section-hmoepage">
@@ -45,7 +37,7 @@
             :key="product.id"
           >
             <div class="card-product" style="">
-              <router-link :to="`/f/product/${product.id}`">
+              <router-link :to="`/product/${product.id}`">
                 <div class="pic ratio ratio-1x1">
                   <img :src="product.imageUrl" alt="" />
                 </div>
@@ -247,6 +239,7 @@ import FrontNav from '@/components/FrontNav.vue'
 import Footer from '@/components/FooterView.vue'
 import Loading from 'vue-loading-overlay'
 import 'vue-loading-overlay/dist/vue-loading.css'
+import emitter from '@/libs/emitter'
 
 export default {
   name: 'IndexView',
@@ -269,6 +262,7 @@ export default {
       this.$http(api)
         .then((res) => {
           this.products = res.data.products
+          emitter.emit('get-cart')
         })
         .catch(() => {
           alert('請重新整理頁面')
@@ -276,6 +270,24 @@ export default {
       setTimeout(() => {
         this.isLoading = false
       }, 2000)
+    },
+    addToCart (id, qty = 1) {
+      const api = `${process.env.VUE_APP_API}/api/${process.env.VUE_APP_PATH}/cart`
+      const data = {
+        product_id: id,
+        qty
+      }
+      this.isLoadingItem = id
+      this.$http
+        .post(api, { data })
+        .then((res) => {
+          alert(res.data.message)
+          emitter.emit('get-cart')
+        })
+        .catch(() => {
+          alert('發生錯誤')
+        })
+      this.isLoadingItem = ''
     }
   },
   mounted () {

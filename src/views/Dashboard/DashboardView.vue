@@ -1,7 +1,7 @@
 <template>
   <nav class="navbar navbar-expand-lg navbar-dark bg-dark">
     <div class="container-fluid">
-      <router-link to="/admin" class="navbar-brand">後台</router-link>
+      <router-link to="/adminproducts" class="navbar-brand">後台</router-link>
       <button
         class="navbar-toggler"
         type="button"
@@ -16,17 +16,17 @@
       <div class="collapse navbar-collapse" id="navbarNavDropdown">
         <ul class="navbar-nav">
           <li class="nav-item">
-            <router-link to="/admin/adminproducts" class="nav-link"
+            <router-link to="/adminproducts" class="nav-link"
               >產品列表</router-link
             >
           </li>
           <li class="nav-item">
-            <router-link to="/admin/order" class="nav-link"
+            <router-link to="/adminOrder" class="nav-link"
               >訂單列表</router-link
             >
           </li>
           <li class="nav-item">
-            <router-link to="/admin/coupon" class="nav-link"
+            <router-link to="/adminCoupon" class="nav-link"
               >優惠券</router-link
             >
           </li>

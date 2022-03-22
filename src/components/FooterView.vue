@@ -4,7 +4,7 @@
       <a class="navbar-brand me-2" href="#">
         <img src="@/assets/img/logo.svg" alt="Reverie" class="logo-img" />
       </a>
-      <p class="mt-3">本網站僅供個人作品使用，不提供商業用途 | <router-link to="/admin">登入後台</router-link></p>
+      <p class="mt-3">本網站僅供個人作品使用，不提供商業用途 | <router-link to="/adminProducts">登入後台</router-link></p>
       <h6>Reverie &copy; 2022 copyright</h6>
     </div>
   </footer>

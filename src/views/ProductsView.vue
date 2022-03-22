@@ -15,7 +15,7 @@
                 :key="product.id"
               >
                 <div class="card-product" style="">
-                  <router-link :to="`/f/product/${product.id}`">
+                  <router-link :to="`/product/${product.id}`">
                     <div class="pic ratio ratio-1x1">
                       <img :src="product.imageUrl" alt="" />
                     </div>
@@ -77,6 +77,7 @@
 <script>
 import ProductsList from '@/components/ProductsList.vue'
 import Pagination from '@/components/PaginationView.vue'
+import emitter from '@/libs/emitter'
 export default {
   name: 'ProductsView',
   data () {
@@ -114,11 +115,10 @@ export default {
         .post(api, { data })
         .then((res) => {
           alert(res.data.message)
-          this.getCart()
-          // emitter.emit("get-Cart");
+          emitter.emit('get-cart')
         })
-        .catch((error) => {
-          alert(error.data.message)
+        .catch(() => {
+          alert('發生錯誤')
         })
       this.isLoadingItem = ''
     }

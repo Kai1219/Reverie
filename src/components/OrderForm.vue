@@ -122,9 +122,6 @@ export default {
           .then((res) => {
             alert(res.data.message)
             // this.addLoading()
-            // this.$emit('reset-cart')
-            // this.$refs.form.resetForm()
-            // this.orderId = res.data.orderId
             this.orderId = res.data.orderId
             this.$router.push({
               name: 'paid',
@@ -136,18 +133,6 @@ export default {
             // alert(error.data.message)
           })
       }
-    },
-    delCartAll () {
-      const api = `${process.env.VUE_APP_API}/api/${process.env.VUE_APP_PATH}/carts`
-      this.$http
-        .delete(api)
-        .then(() => {
-          // this.$emit('get-cart')
-          console.log('del')
-        })
-        .catch((error) => {
-          alert(error.data.message)
-        })
     }
   }
 }

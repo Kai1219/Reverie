@@ -10,6 +10,7 @@
     <a href="#" class="list-group-item list-group-item-action">冰淇淋</a>
     <a href="#" class="list-group-item list-group-item-action">冰棒</a>
     <a href="#" class="list-group-item list-group-item-action">蛋糕</a>
+    <a href="#" class="list-group-item list-group-item-action">塔/派</a>
   </div>
 </template>
 

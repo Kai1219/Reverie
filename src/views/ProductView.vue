@@ -14,7 +14,7 @@
                   <router-link :to="`/`">首頁</router-link>
                 </li>
                 <li class="breadcrumb-item">
-                  <router-link to="/f/products">甜蜜食光</router-link>
+                  <router-link to="/products">商品一覽</router-link>
                 </li>
                 <li class="breadcrumb-item active" aria-current="page">
                   {{ product.category }}
@@ -78,6 +78,7 @@
 <script>
 import ProductsList from '@/components/ProductsList.vue'
 import ProductSwiper from '@/components/ProductSwiper.vue'
+import emitter from '@/libs/emitter'
 export default {
   name: 'ProductView',
   data () {
@@ -112,12 +113,11 @@ export default {
       this.$http
         .post(api, { data })
         .then((res) => {
+          emitter.emit('get-cart')
           alert(res.data.message)
-          this.getCart()
-          // emitter.emit("get-Cart");
         })
-        .catch((error) => {
-          alert(error.data.message)
+        .catch(() => {
+          alert('請再加入購物車一次')
         })
       this.isLoadingItem = ''
     }
