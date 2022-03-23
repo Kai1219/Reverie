@@ -5,8 +5,7 @@
     </section>
     <section class="container p-5">
       <div class="row gx-5">
-        <ProductsList></ProductsList>
-        <div class="products-items col-sm-9">
+        <div class="products-items col-10 mx-auto">
           <div class="row">
             <nav aria-label="breadcrumb">
               <ol class="breadcrumb">
@@ -21,14 +20,17 @@
                 </li>
               </ol>
             </nav>
-            <div class="col-sm-6">
+            <div class="col col-md-6 px-5">
               <ProductSwiper :swiperProduct="product"></ProductSwiper>
             </div>
-            <div class="col-sm-6 product-content">
+            <div class="col col-md-6 px-5 product-content">
               <h2>{{ product.title }}</h2>
-              <p>{{ product.description }}</p>
+              <span class="badge bg-secondary rounded-pill">{{
+                product.category
+              }}</span>
               <hr />
               <p>{{ product.content }}</p>
+              <p>{{ product.description }}</p>
               <div class="price my-5">
                 <div v-if="product.origin_price === product.price">
                   <span class="h5">NT${{ product.price }}</span>
@@ -57,10 +59,11 @@
                 <button
                   type="button"
                   class="btn text-dark my-3"
-                  @click="addToFavorite"
+                  @click="toggleFavorite(product.id)"
                 >
-                  <i class="bi bi-heart"></i>
-                  加入追蹤清單
+                  <i class="bi bi-heart-fill" v-if="favoriteItems.includes(product.id)"></i>
+                      <i class="bi bi-heart" v-else></i>
+                  我的最愛
                 </button>
               </div>
             </div>
@@ -76,7 +79,6 @@
 }
 </style>
 <script>
-import ProductsList from '@/components/ProductsList.vue'
 import ProductSwiper from '@/components/ProductSwiper.vue'
 import emitter from '@/libs/emitter'
 export default {
@@ -84,11 +86,11 @@ export default {
   data () {
     return {
       product: {},
-      qty: 1
+      qty: 1,
+      favoriteItems: JSON.parse(localStorage.getItem('favorite')) || []
     }
   },
   components: {
-    ProductsList,
     ProductSwiper
   },
   methods: {
@@ -120,6 +122,25 @@ export default {
           alert('請再加入購物車一次')
         })
       this.isLoadingItem = ''
+    },
+    toggleFavorite (id) {
+      const favIndex = this.favoriteItems.findIndex((item) => item === id)
+      if (favIndex === -1) {
+        this.favoriteItems.push(id)
+        console.log('push', this.favoriteItems)
+      } else {
+        this.favoriteItems.splice(favIndex, 1)
+        console.log('splice', this.favoriteItems)
+      }
+    }
+  },
+  watch: {
+    favoriteItems: {
+      handler () {
+        // localStorage的自訂欄位,要存入的JSON內容
+        localStorage.setItem('favorite', JSON.stringify(this.favoriteItems))
+      },
+      deep: true
     }
   },
   mounted () {

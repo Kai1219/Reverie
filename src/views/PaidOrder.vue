@@ -187,6 +187,7 @@
 </style>
 
 <script>
+import emitter from '@/libs/emitter'
 export default {
   name: 'SendOrder',
   data () {
@@ -210,6 +211,7 @@ export default {
   methods: {
     getOrder () {
       const { Id } = this.$route.params
+      console.log('id', this.orderData.id)
       if (Id) {
         const api = `${process.env.VUE_APP_API}/api/${process.env.VUE_APP_PATH}/order/${Id}`
         this.$http(api)
@@ -230,6 +232,8 @@ export default {
           .then((res) => {
             console.log('res', res.data.message)
             console.log('this.orderData', this.orderData)
+            this.getOrder()
+            emitter.emit('get-cart')
             this.$router.push({
               name: 'paid',
               params: { Id: `${this.orderData.id}` }
@@ -246,6 +250,7 @@ export default {
   },
   mounted () {
     this.getOrder()
+    console.log('id', this.orderData.id)
   }
 }
 </script>

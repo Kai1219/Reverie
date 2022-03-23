@@ -31,7 +31,7 @@
 </template>
 
 <script>
-import Pagination from '@/components/PaginationView.vue'
+import Pagination from '@/components/OrderPagination.vue'
 
 export default {
   props: ['token'],

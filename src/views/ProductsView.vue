@@ -5,7 +5,7 @@
     </section>
     <section class="container p-5">
       <div class="row gx-5">
-        <ProductsList></ProductsList>
+        <ProductsList @get-category="getCategory"></ProductsList>
         <div class="products-items col-sm-9">
           <div class="products">
             <div class="row row-cols-1 row-cols-lg-3 g-lg-5">
@@ -37,10 +37,11 @@
                       <button
                         type="button"
                         class="btn text-dark"
-                        @click="addToFavorite"
+                        @click="toggleFavorite(product.id)"
                       >
-                        <i class="bi bi-heart"></i>
-                        加入追蹤清單
+                      <i class="bi bi-heart-fill" v-if="favoriteItems.includes(product.id)"></i>
+                      <i class="bi bi-heart" v-else></i>
+                        我的最愛
                       </button>
                       <button
                         type="button"
@@ -55,7 +56,7 @@
               </div>
             </div>
           </div>
-          <Pagination :pages="pagination"></Pagination>
+          <Pagination :pages="pagination" @get-products="getProducts"></Pagination>
         </div>
       </div>
     </section>
@@ -76,7 +77,7 @@
 
 <script>
 import ProductsList from '@/components/ProductsList.vue'
-import Pagination from '@/components/PaginationView.vue'
+import Pagination from '@/components/ProductsPagination.vue'
 import emitter from '@/libs/emitter'
 export default {
   name: 'ProductsView',
@@ -84,7 +85,8 @@ export default {
     return {
       products: [],
       pagination: {},
-      isLoadingItem: ''
+      isLoadingItem: '',
+      favoriteItems: JSON.parse(localStorage.getItem('favorite')) || []
     }
   },
   components: {
@@ -98,7 +100,6 @@ export default {
         .then((res) => {
           this.products = res.data.products
           this.pagination = res.data.pagination
-          console.log(this.products)
         })
         .catch((error) => {
           alert(error.data.message)
@@ -121,9 +122,38 @@ export default {
           alert('發生錯誤')
         })
       this.isLoadingItem = ''
+    },
+    getCategory (category) {
+      let api = `${process.env.VUE_APP_API}/api/${process.env.VUE_APP_PATH}/products`
+      if (category) {
+        api = `${process.env.VUE_APP_API}/api/${process.env.VUE_APP_PATH}/products?category=${category}`
+      }
+      this.$http(api)
+        .then((res) => {
+          this.products = res.data.products
+        })
+        .catch((error) => {
+          alert(error.data.message)
+        })
+    },
+    toggleFavorite (id) {
+      const favIndex = this.favoriteItems.findIndex((item) => item === id)
+      if (favIndex === -1) {
+        this.favoriteItems.push(id)
+      } else {
+        this.favoriteItems.splice(favIndex, 1)
+      }
     }
   },
-
+  watch: {
+    favoriteItems: {
+      handler () {
+        // localStorage的自訂欄位,要存入的JSON內容
+        localStorage.setItem('favorite', JSON.stringify(this.favoriteItems))
+      },
+      deep: true
+    }
+  },
   mounted () {
     this.getProducts()
   }
