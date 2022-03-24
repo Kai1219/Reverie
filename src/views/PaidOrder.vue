@@ -15,7 +15,8 @@
     </section>
     <section class="">
       <div class="thank-text p-5 d-flex flex-column align-items-center">
-        <h2>訂購完成!!</h2>
+        <h2 v-if="orderData.is_paid" class="text-success">付款完成!</h2>
+        <h2 v-else>訂購完成!!</h2>
         <p>
           {{
             orderData.user.name
@@ -29,7 +30,7 @@
           ></span
         >
         <span v-else
-          ><button class="btn btn-primary" @click="goPaid">
+          ><button class="btn btn-primary" @click="goPaid()">
             確定付款
           </button></span
         >
@@ -44,16 +45,16 @@
                 <caption class="fs-5 bg-primary mb-2 px-3 text-white">
                   訂購商品
                 </caption>
-                <thead class="d-none d-lg-block d-xl-lg-block">
+                <thead class="d-none d-lg-block d-xl-lg-block border-0">
                   <tr class="d-flex px-5 row">
                     <th scope="col" class="col-12 col-lg-8">商品資料</th>
                     <th scope="col" class="col-6 col-lg-2">數量</th>
                     <th scope="col" class="col-6 col-lg-2">小計</th>
                   </tr>
                 </thead>
-                <tbody>
+                <tbody class="border-0">
                   <tr
-                    class="d-flex px-5 row"
+                    class=" px-5 row text-center "
                     v-for="item in orderData.products"
                     :key="item.id"
                   >
@@ -63,15 +64,15 @@
                         alt=""
                         class="w-50 col"
                       />
-                      <p class="d-inline-block col my-auto text-center">
+                      <p class="d-inline-block col my-auto">
                         {{ item.product.title }}
                       </p>
                     </th>
-                    <td class="col-6 col-lg-2 row">
-                      <p>{{ item.qty }}{{ item.product.unit }}</p>
+                    <td class="col-6 col-lg-2 row flex-grow-1">
+                      <p class="my-auto">{{ item.qty }}{{ item.product.unit }}</p>
                     </td>
-                    <td class="col-6 col-lg-2 row">
-                      <p>NT${{ item.total }}元</p>
+                    <td class="col-6 col-lg-2 row flex-grow-1">
+                      <p class="my-auto">NT${{ item.total }}元</p>
                     </td>
                   </tr>
                 </tbody>
@@ -84,7 +85,7 @@
                 <caption class="fs-5 bg-primary mb-2 px-3 text-white">
                   顧客資訊
                 </caption>
-                <tbody>
+                <tbody class="border-0">
                   <tr class="d-flex px-5">
                     <th scope="row" class="col-6 col-lg-3 text-center">
                       訂購日期
@@ -111,7 +112,7 @@
                   </tr>
                   <tr class="d-flex px-5">
                     <th scope="row" class="col-6 col-lg-3 text-center">留言</th>
-                    <td class="col-6 col-lg-9">{{ orderData.message }}</td>
+                    <td class="col-6 col-lg-9">{{ orderData.user.message }}</td>
                   </tr>
                   <tr class="d-flex px-5">
                     <th scope="row" class="col-6 col-lg-3 text-center">
@@ -131,6 +132,8 @@
         </div>
       </div>
     </section>
+    <!--Modal-->
+    <paidSuccessModal ref="successModal"></paidSuccessModal>
   </main>
 </template>
 
@@ -174,6 +177,11 @@
 /* table */
 .table > :not(:first-child) {
   border-top: none;
+  border-bottom: none;
+}
+
+thead, tbody, tfoot, tr, td, th{
+  border-color: #d5d5d5;
 }
 
 .order {
@@ -188,6 +196,7 @@
 
 <script>
 import emitter from '@/libs/emitter'
+import paidSuccessModal from '@/components/PaidSuccessModal.vue'
 export default {
   name: 'SendOrder',
   data () {
@@ -208,6 +217,7 @@ export default {
       }
     }
   },
+  components: { paidSuccessModal },
   methods: {
     getOrder () {
       const { Id } = this.$route.params
@@ -229,11 +239,10 @@ export default {
         const api = `${process.env.VUE_APP_API}/api/${process.env.VUE_APP_PATH}/pay/${this.orderData.id}`
         this.$http
           .post(api)
-          .then((res) => {
-            console.log('res', res.data.message)
-            console.log('this.orderData', this.orderData)
+          .then(() => {
             this.getOrder()
             emitter.emit('get-cart')
+            this.$refs.successModal.openModal()
             this.$router.push({
               name: 'paid',
               params: { Id: `${this.orderData.id}` }
