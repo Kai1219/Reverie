@@ -56,7 +56,7 @@
               </div>
             </div>
           </div>
-          <Pagination :pages="pagination" @get-products="getProducts"></Pagination>
+          <Pagination :pages="pagination" @emit-pages="getProducts"></Pagination>
         </div>
       </div>
     </section>
@@ -77,7 +77,7 @@
 
 <script>
 import ProductsList from '@/components/ProductsList.vue'
-import Pagination from '@/components/ProductsPagination.vue'
+import Pagination from '@/components/PaginationVuew.vue'
 import emitter from '@/libs/emitter'
 export default {
   name: 'ProductsView',

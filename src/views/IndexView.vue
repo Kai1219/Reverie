@@ -1,5 +1,5 @@
 <template>
-  <loading v-model:active="isLoading" :is-full-page="fullPage"> </loading>
+  <Loading ref="Loading"> </Loading>
 
   <header>
     <section class="section-hmoepage">
@@ -237,17 +237,14 @@ h2.title sapn:after {
 <script>
 import FrontNav from '@/components/FrontNav.vue'
 import Footer from '@/components/FooterView.vue'
-import Loading from 'vue-loading-overlay'
-import 'vue-loading-overlay/dist/vue-loading.css'
 import emitter from '@/libs/emitter'
+import Loading from '@/components/LoadingView.vue'
 
 export default {
   name: 'IndexView',
   data () {
     return {
-      products: [],
-      isLoading: false,
-      fullPage: true
+      products: []
     }
   },
   components: {
@@ -257,7 +254,7 @@ export default {
   },
   methods: {
     getProducts () {
-      this.isLoading = true
+      this.$refs.Loading.ToggleLoading('on')
       const api = `${process.env.VUE_APP_API}/api/${process.env.VUE_APP_PATH}/products/all`
       this.$http(api)
         .then((res) => {
@@ -267,9 +264,7 @@ export default {
         .catch(() => {
           alert('請重新整理頁面')
         })
-      setTimeout(() => {
-        this.isLoading = false
-      }, 2000)
+      this.$refs.Loading.ToggleLoading('off')
     },
     addToCart (id, qty = 1) {
       const api = `${process.env.VUE_APP_API}/api/${process.env.VUE_APP_PATH}/cart`

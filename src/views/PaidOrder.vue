@@ -196,7 +196,7 @@ thead, tbody, tfoot, tr, td, th{
 
 <script>
 import emitter from '@/libs/emitter'
-import paidSuccessModal from '@/components/PaidSuccessModal.vue'
+import paidSuccessModal from '@/components/Modal/PaidSuccessModal.vue'
 export default {
   name: 'SendOrder',
   data () {

@@ -7,7 +7,7 @@
         <h1>Reverie</h1>
       </div>
       <router-link class="navbar-brand me-auto" :to="`/`"
-        ><img src="@/assets/img/logo.svg" alt="Reverie" class="logo-img"
+        ><img src="@/assets/img/r-logo.png" alt="Reverie" class="logo-img"
       /></router-link>
 
       <div class="nav-item order-lg-2">

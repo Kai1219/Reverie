@@ -1,27 +1,27 @@
 <template>
   <div
     class="modal fade"
-    id="delProductModal"
+    id="delModal"
     tabindex="-1"
-    aria-labelledby="delProductModalLabel"
+    aria-labelledby="delModalLabel"
     aria-hidden="true"
     ref="modal"
   >
     <div class="modal-dialog">
       <div class="modal-content">
         <div class="modal-header bg-danger text-white">
-          <h5 class="modal-title" id="delProductModalLabel">確定是否刪除!</h5>
+          <h5 class="modal-title" id="delModalLabel">確定是否刪除!</h5>
           <button
             type="button"
             class="btn-close"
-            @click="closeModal"
+            data-bs-dismiss="modal"
             aria-label="Close"
           ></button>
         </div>
         <div class="modal-body">
           <p>
             是否刪除<strong class="text-danger">{{
-              order.user
+              item.title
             }}</strong
             >?(刪除後將無法復原!!)
           </p>
@@ -30,38 +30,31 @@
           <button
             type="button"
             class="btn btn-secondary"
-            @click="closeModal"
+            data-bs-dismiss="modal"
           >
             取消
           </button>
-          <button type="button" class="btn btn-danger" @click="$emit('del-item')">確定刪除</button>
+          <button type="button" class="btn btn-danger" @click="delItem()">
+            確定刪除
+          </button>
         </div>
       </div>
     </div>
   </div>
 </template>
+
 <script>
-import Modal from 'bootstrap/js/dist/modal'
+import modalMixin from '@/mixins/modalMixin'
 export default {
-  props: {
-    order: {}
-  },
+  props: ['item'],
   data () {
-    return {
-    }
+    return {}
   },
-  emits: ['del-item'],
+  mixins: [modalMixin],
   methods: {
-    openModal () {
-      console.log(this.order)
-      this.modal.show()
-    },
-    closeModal () {
-      this.modal.hide()
+    delItem () {
+      this.$emit('del-item')
     }
-  },
-  mounted () {
-    this.modal = new Modal(this.$refs.modal)
   }
 }
 </script>
