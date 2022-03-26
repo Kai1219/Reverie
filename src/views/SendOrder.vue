@@ -93,6 +93,10 @@
                 </table>
                 <div class="my-3">
                   <div class="d-flex flex-column align-items-end">
+                    <div class="text-success text-end" v-if="discountCoupon.code">
+                      <p class="d-inline">已套用優惠券:{{discountCoupon.code}}</p>
+                      <p>-{{cartData.total-cartData.final_total}}</p>
+                    </div>
                     <p class="fw-normal">合計:NT${{ cartData.final_total }}</p>
                   </div>
                 </div>
@@ -103,6 +107,7 @@
       </div>
     </section>
     <OrderForm :cartData="cartData"></OrderForm>
+    <Loading ref="Loading"> </Loading>
   </main>
 </template>
 
@@ -170,29 +175,40 @@
 
 <script>
 import OrderForm from '@/components/OrderForm.vue'
+import Loading from '@/components/LoadingView.vue'
 export default {
   name: 'SendOrder',
   data () {
     return {
       cartData: {
         carts: []
+      },
+      discountCoupon: {
+        code: ''
       }
     }
   },
   components: {
-    OrderForm
+    OrderForm,
+    Loading
   },
   methods: {
     getCart () {
+      this.$refs.Loading.ToggleLoading('on')
       const api = `${process.env.VUE_APP_API}/api/${process.env.VUE_APP_PATH}/cart`
       this.$http(api)
         .then((res) => {
           this.cartData = res.data.data
-          console.log(this.cartData)
+          if (this.cartData.final_total === this.cartData.total) {
+            this.discountCoupon.code = ''
+          } else {
+            this.discountCoupon.code = this.cartData.carts[0].coupon.code
+          }
         })
         .catch((error) => {
           alert(error.data.message)
         })
+      this.$refs.Loading.ToggleLoading('off')
     }
   },
   mounted () {

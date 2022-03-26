@@ -35,6 +35,7 @@
       </form>
     </div>
   </div>
+  <Loading ref="Loading"> </Loading>
 </template>
 
 <style lang="scss">
@@ -83,6 +84,7 @@
 </style>
 
 <script>
+import Loading from '@/components/LoadingView.vue'
 export default {
   name: 'LoginView',
   data () {
@@ -90,6 +92,7 @@ export default {
       user: {}
     }
   },
+  components: { Loading },
   methods: {
     signIn () {
       const api = `${process.env.VUE_APP_API}/admin/signin`

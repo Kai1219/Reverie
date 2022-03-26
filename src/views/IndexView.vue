@@ -1,6 +1,4 @@
 <template>
-  <Loading ref="Loading"> </Loading>
-
   <header>
     <section class="section-hmoepage">
       <div class="hmoepage position-relative">
@@ -13,11 +11,12 @@
         </div>
         <div class="text-center w-100 h-100">
           <div
-            class="text shadow-sm m-0 position-absolute top-0 start-0 bottom-0 end-0"
+            class="text shadow-sm position-absolute top-0 start-0 bottom-0 end-0"
           >
-            <h3 class="mt-5">白日夢</h3>
-            <p class="mb-4">被生活壓的喘不過氣時，來這裡，做個白日夢</p>
-            <button type="button" class="btn btn-primary">查看更多</button>
+            <h1 class="mt-5">白日夢</h1>
+            <img src="@/assets/img/r-logo.png" alt="Reverie" class="logo-img w-50" />
+            <p class="my-3">被生活壓的喘不過氣時，來這裡，做個白日夢</p>
+            <button type="button" class="btn btn-primary"><i class="bi bi-arrow-down mt-5"></i></button>
           </div>
         </div>
       </div>
@@ -38,31 +37,34 @@
           >
             <div class="card-product" style="">
               <router-link :to="`/product/${product.id}`">
-                <div class="pic ratio ratio-1x1">
-                  <img :src="product.imageUrl" alt="" />
-                </div>
+                <div class="pic ratio ratio-1x1" :style="{backgroundImage:`url(${product.imageUrl})`}">
+                    </div>
               </router-link>
               <div class="card-body pb-0">
                 <h5 class="card-title text-center">{{ product.title }}</h5>
               </div>
               <div class="price text-center">
                 <div v-if="product.origin_price === product.price">
-                  <h5 class="">NT${{ product.price }}</h5>
-                </div>
-                <div v-else>
-                  <h5 class="">NT${{ product.price }}&nbsp;</h5>
-                  <p class="text-decoration-line-through fw-light">
-                    NT${{ product.origin_price }}
-                  </p>
-                </div>
+                    <p class="h5 d-inline">NT${{ product.price }}</p>
+                    </div>
+                    <div v-else>
+                      <p class="h5 d-inline">NT${{ product.price }}&nbsp;</p>
+                      <span class="text-decoration-line-through fw-light"
+                        >NT${{ product.origin_price }}</span
+                      >
+                    </div>
                 <div class="btn-group mt-2">
                   <button
                     type="button"
                     class="btn text-dark"
-                    @click="addToFavorite"
+                    @click="toggleFavorite(product.id)"
                   >
-                    <i class="bi bi-heart"></i>
-                    加入追蹤清單
+                    <i
+                      class="bi bi-heart-fill"
+                      v-if="favoriteItems.includes(product.id)"
+                    ></i>
+                    <i class="bi bi-heart" v-else></i>
+                    我的最愛
                   </button>
                   <button
                     type="button"
@@ -90,11 +92,9 @@
         <div class="text col-sm-12 col-lg-6 my-auto position-relative">
           <h2 class="fs-1 mb-3">品牌沿革</h2>
           <p class="fs-5 mb-4">
-            使用寬度和高度通用類別，可以輕鬆地將一個元素加寬或增高。使用寬度和高度通用類別，可以輕鬆地將一個元素加寬或增高。使用寬度和高度通用類別，可以輕鬆地將一個元素加寬或增高。使用寬度和高度通用類別，可以輕鬆地將一個元素加寬或增高。使用寬度和高度通用類別，可以輕鬆地將一個元素加寬或增高。使用寬度和高度通用類別，可以輕鬆地將一個元素加寬或增高。使用寬度和高度通用類別
+            Reverie，夢幻，或譯作夢想，現在的生活步調越來越快，有時甚至忘了怎麼放鬆，享受生活，希望每個到這裡來的人都能透過品嘗甜點，稍作休息、喘口氣，想起那些美好的時光，做一個白日夢
           </p>
-          <button type="button" class="btn btn-primary position-absolute">
-            查看更多
-          </button>
+          <router-link to="/products" type="button" class="button btn btn-primary position-absolute">查看更多</router-link>
         </div>
       </div>
     </section>
@@ -128,6 +128,7 @@
       </div>
     </section>
   </main>
+  <Loading ref="Loading"> </Loading>
   <Footer></Footer>
 </template>
 
@@ -147,19 +148,21 @@
 
 .hmoepage .text {
   background-color: #fff9;
-  padding: 5%;
-  /* position: absolute;
+  padding: 0%;
+  position: absolute;
   width: 90%;
   height: 90%;
-  left: 0%;
-  right: 0%;
-  margin: 1rem auto;
-  border: 10px solid #FFF;*/
+  left: 50%;
+  top: 50%;
+  margin: auto;
+  border: 5px solid #FFF;
 }
 
 @media screen and (min-width: 576px) {
   .hmoepage .text {
-    padding: 15%;
+    padding: 10%;
+    border: 10px solid #FFF;
+    font-size: 1.25rem;
   }
 }
 
@@ -200,14 +203,21 @@ h2.title sapn:before {
 h2.title sapn:after {
   right: -120%;
 }
+
+.pic{
+  background-size: cover;
+  background-repeat: no-repeat;
+  background-position: center center;
+}
 /*section-brand*/
 .brand .text {
   background-color: #fff2;
   padding: 10% 10%;
   margin-bottom: 10%;
 }
-.brand button {
+.brand .button {
   right: 2.5rem;
+  color: #fff;
 }
 @media screen and (min-width: 576px) {
   .brand .text {
@@ -217,7 +227,7 @@ h2.title sapn:after {
   .brand .pic {
     padding: 5% 5%;
   }
-  .brand button {
+  .brand .button {
     bottom: 2rem;
     right: 2rem;
   }
@@ -244,7 +254,8 @@ export default {
   name: 'IndexView',
   data () {
     return {
-      products: []
+      products: [],
+      favoriteItems: JSON.parse(localStorage.getItem('favorite')) || []
     }
   },
   components: {
@@ -283,6 +294,23 @@ export default {
           alert('發生錯誤')
         })
       this.isLoadingItem = ''
+    },
+    toggleFavorite (id) {
+      const favIndex = this.favoriteItems.findIndex((item) => item === id)
+      if (favIndex === -1) {
+        this.favoriteItems.push(id)
+      } else {
+        this.favoriteItems.splice(favIndex, 1)
+      }
+    }
+  },
+  watch: {
+    favoriteItems: {
+      handler () {
+        // localStorage的自訂欄位,要存入的JSON內容
+        localStorage.setItem('favorite', JSON.stringify(this.favoriteItems))
+      },
+      deep: true
     }
   },
   mounted () {

@@ -120,8 +120,6 @@ export default {
         this.$http
           .post(api, { data })
           .then((res) => {
-            alert(res.data.message)
-            // this.addLoading()
             this.orderId = res.data.orderId
             this.$router.push({
               name: 'paid',

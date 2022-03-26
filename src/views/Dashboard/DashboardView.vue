@@ -38,16 +38,20 @@
       <a href="#" @click.prevent="signout">登出</a>
     </div>
   </nav>
-  <router-view v-if="checkSuccess"></router-view>
+  <Loading ref="Loading"></Loading>
+  <router-view v-if="checkSuccess">
+  </router-view>
 </template>
 
 <script>
+import Loading from '@/components/LoadingView.vue'
 export default {
   data () {
     return {
       checkSuccess: false
     }
   },
+  components: { Loading },
   methods: {
     checkAdmin () {
       const token = document.cookie.replace(
@@ -78,7 +82,9 @@ export default {
     }
   },
   mounted () {
+    this.$refs.Loading.ToggleLoading('on')
     this.checkAdmin()
+    this.$refs.Loading.ToggleLoading('off')
   }
 }
 </script>

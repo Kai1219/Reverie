@@ -76,6 +76,11 @@
                     </td>
                   </tr>
                 </tbody>
+                 <tfooter class="row">
+                    <td class="px-5">
+                      <p class="text-end fw-bold">合計:NT${{ orderData.total }}</p>
+                    </td>
+                  </tfooter>
               </table>
             </div>
           </div>
@@ -90,7 +95,7 @@
                     <th scope="row" class="col-6 col-lg-3 text-center">
                       訂購日期
                     </th>
-                    <td class="col-6 col-lg-9">{{ orderData.create_at }}</td>
+                    <td class="col-6 col-lg-9">{{ $filters.date(orderData.create_at) }}</td>
                   </tr>
                   <tr class="d-flex px-5">
                     <th scope="row" class="col-6 col-lg-3 text-center">姓名</th>
@@ -132,6 +137,7 @@
         </div>
       </div>
     </section>
+    <Loading ref="Loading"> </Loading>
     <!--Modal-->
     <paidSuccessModal ref="successModal"></paidSuccessModal>
   </main>
@@ -197,6 +203,7 @@ thead, tbody, tfoot, tr, td, th{
 <script>
 import emitter from '@/libs/emitter'
 import paidSuccessModal from '@/components/Modal/PaidSuccessModal.vue'
+import Loading from '@/components/LoadingView.vue'
 export default {
   name: 'SendOrder',
   data () {
@@ -217,9 +224,10 @@ export default {
       }
     }
   },
-  components: { paidSuccessModal },
+  components: { paidSuccessModal, Loading },
   methods: {
     getOrder () {
+      this.$refs.Loading.ToggleLoading('on')
       const { Id } = this.$route.params
       console.log('id', this.orderData.id)
       if (Id) {
@@ -233,13 +241,16 @@ export default {
             // alert(error.data.message)
           })
       }
+      this.$refs.Loading.ToggleLoading('off')
     },
     goPaid () {
+      this.$refs.Loading.ToggleLoading('on')
       if (this.orderData.id) {
         const api = `${process.env.VUE_APP_API}/api/${process.env.VUE_APP_PATH}/pay/${this.orderData.id}`
         this.$http
           .post(api)
           .then(() => {
+            this.$refs.Loading.ToggleLoading('off')
             this.getOrder()
             emitter.emit('get-cart')
             this.$refs.successModal.openModal()

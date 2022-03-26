@@ -72,6 +72,7 @@
       </div>
     </section>
   </main>
+  <Loading ref="Loading"> </Loading>
 </template>
 <style lang="scss">
 .breadcrumb a {
@@ -81,6 +82,7 @@
 <script>
 import ProductSwiper from '@/components/ProductSwiper.vue'
 import emitter from '@/libs/emitter'
+import Loading from '@/components/LoadingView.vue'
 export default {
   name: 'ProductView',
   data () {
@@ -91,12 +93,13 @@ export default {
     }
   },
   components: {
-    ProductSwiper
+    ProductSwiper, Loading
   },
   methods: {
     getProducts () {
       const { id } = this.$route.params
       const api = `${process.env.VUE_APP_API}/api/${process.env.VUE_APP_PATH}/product/${id}`
+      this.$refs.Loading.ToggleLoading('on')
       this.$http(api)
         .then((res) => {
           this.product = res.data.product
@@ -104,6 +107,7 @@ export default {
         .catch((error) => {
           alert(error.data.message)
         })
+      this.$refs.Loading.ToggleLoading('off')
     },
     addToCart (id) {
       const api = `${process.env.VUE_APP_API}/api/${process.env.VUE_APP_PATH}/cart`

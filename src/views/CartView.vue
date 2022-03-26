@@ -77,7 +77,7 @@
           </div>
           <div class="col-1 col-md-1 order-md-5 order-2">
             <button type="button" class="cancel" @click="delCartItem(item)">
-              <i class="bi bi-x-square fs-5"></i>
+              <i class="bi bi-x-square fs-5 text-danger"></i>
             </button>
           </div>
         </div>
@@ -85,7 +85,7 @@
       <div class="my-3">
         <div class="d-flex flex-column align-items-end">
           <p class="">小計:NT${{ cartData.total }}</p>
-          <form class="row g-3">
+          <form class="row g-3" v-if="!discountCoupon.code">
             <div class="col-auto">
               <label for="coupon" class="visually-hidden"
                 >請輸入優惠券代碼</label
@@ -95,18 +95,29 @@
                 class="form-control"
                 id="coupon"
                 placeholder="請輸入優惠券代碼"
+                v-model="code"
               />
             </div>
             <div class="col-auto">
-              <button type="submit" class="btn btn-primary mb-3">套用</button>
+              <button type="submit" class="btn btn-primary mb-3" @click="discount">套用</button>
             </div>
           </form>
+          <div class="text-success text-end" v-else>
+            <button type="button" class="cancel d-inline" @click="delDiscount()">
+              <i class="bi bi-x-square fs-5 text-danger"></i>
+            </button>
+            <p v-if="discountCoupon.code" class="d-inline">已套用優惠券:{{discountCoupon.code}}</p>
+            <p>-{{cartData.total-cartData.final_total}}</p>
+          </div>
         </div>
         <div class="d-flex justify-content-between align-items-center mt-5">
           <button type="button" class="btn btn-delete-all" @click="delCartAll">
             清空購物車
           </button>
-          <p class="fw-bold fs-4">合計:NT${{ cartData.final_total }}</p>
+          <p class="fw-bold fs-4">合計:NT$
+            <span v-if="discountCoupon">{{cartData.final_total}}</span>
+            <span v-else>{{cartData.total}}</span>
+          </p>
         </div>
       </div>
     </section>
@@ -120,6 +131,7 @@
       </button>
     </div>
   </main>
+  <Loading ref="Loading"> </Loading>
 </template>
 
 <style lang="scss">
@@ -190,6 +202,7 @@
 
 <script>
 import emitter from '@/libs/emitter'
+import Loading from '@/components/LoadingView.vue'
 export default {
   name: 'CartView',
   data () {
@@ -197,9 +210,16 @@ export default {
       cartData: {
         carts: []
       },
+      code: '',
+      discountCoupon: {
+        final_total: '',
+        message: '',
+        code: ''
+      },
       isLoadingItem: ''
     }
   },
+  components: { Loading },
   methods: {
     goToSendOrder () {
       if (this.cartData.carts.length <= 0) {
@@ -209,15 +229,21 @@ export default {
       }
     },
     getCart () {
+      this.$refs.Loading.ToggleLoading('on')
       const api = `${process.env.VUE_APP_API}/api/${process.env.VUE_APP_PATH}/cart`
       this.$http(api)
         .then((res) => {
           this.cartData = res.data.data
-          console.log(this.cartData)
+          if (this.cartData.final_total === this.cartData.total) {
+            this.discountCoupon.code = ''
+          } else {
+            this.discountCoupon.code = this.cartData.carts[0].coupon.code
+          }
         })
         .catch((error) => {
-          alert(error.data.message)
+          alert(error)
         })
+      this.$refs.Loading.ToggleLoading('off')
     },
     updateCartItem (item) {
       const api = `${process.env.VUE_APP_API}/api/${process.env.VUE_APP_PATH}/cart/${item.id}`
@@ -225,6 +251,7 @@ export default {
         product_id: item.id,
         qty: item.qty
       }
+      console.log(data)
       this.isLoadingItem = item.id
       this.$http
         .put(api, { data })
@@ -264,6 +291,25 @@ export default {
             alert(error.data.message)
           })
       }
+    },
+    discount () {
+      const api = `${process.env.VUE_APP_API}/api/${process.env.VUE_APP_PATH}/coupon`
+      const data = {
+        code: this.code
+      }
+      this.$http
+        .post(api, { data })
+        .then((res) => {
+          this.discountCoupon.final_total = res.data.data.final_total
+          this.discountCoupon.message = res.data.message
+          this.getCart()
+        })
+        .catch(() => {
+          alert('您的優惠券無效。請重新檢查代碼是否填寫有誤及英文字母大小寫是否符合。')
+        })
+    },
+    delDiscount () {
+      this.discountCoupon.code = ''
     }
   },
   mounted () {

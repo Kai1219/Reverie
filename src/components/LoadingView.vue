@@ -33,7 +33,7 @@ export default {
       } else {
         setTimeout(() => {
           this.isLoading = false
-        }, 2000)
+        }, 500)
       }
     },
     onCancel () {

@@ -16,19 +16,20 @@
               >
                 <div class="card-product" style="">
                   <router-link :to="`/product/${product.id}`">
-                    <div class="pic ratio ratio-1x1">
-                      <img :src="product.imageUrl" alt="" />
+                    <div class="pic ratio ratio-1x1" :style="{backgroundImage:`url(${product.imageUrl})`}">
                     </div>
                   </router-link>
                   <div class="card-body pb-0">
-                    <h5 class="card-title text-center">{{ product.title }}</h5>
+                    <h5 class="card-title text-center">{{ product.title }}
+                      <span class="badge bg-secondary rounded-pill">{{product.category}}</span>
+                    </h5>
                   </div>
                   <div class="price text-center">
                     <div v-if="product.origin_price === product.price">
-                      <span class="h5">NT${{ product.price }}</span>
+                      <p class="h5 d-inline">NT${{ product.price }}</p>
                     </div>
                     <div v-else>
-                      <span class="h5">NT${{ product.price }}&nbsp;</span>
+                      <p class="h5 d-inline">NT${{ product.price }}&nbsp;</p>
                       <span class="text-decoration-line-through fw-light"
                         >NT${{ product.origin_price }}</span
                       >
@@ -60,6 +61,7 @@
         </div>
       </div>
     </section>
+    <Loading ref="Loading"> </Loading>
   </main>
 </template>
 
@@ -71,7 +73,10 @@
   background-repeat: no-repeat;
   background-position: center center;
 }
-@media screen and (min-width: 576px) {
+.pic{
+  background-size: cover;
+  background-repeat: no-repeat;
+  background-position: center center;
 }
 </style>
 
@@ -79,6 +84,7 @@
 import ProductsList from '@/components/ProductsList.vue'
 import Pagination from '@/components/PaginationVuew.vue'
 import emitter from '@/libs/emitter'
+import Loading from '@/components/LoadingView.vue'
 export default {
   name: 'ProductsView',
   data () {
@@ -91,10 +97,12 @@ export default {
   },
   components: {
     ProductsList,
-    Pagination
+    Pagination,
+    Loading
   },
   methods: {
     getProducts (page = 1) {
+      this.$refs.Loading.ToggleLoading('on')
       const api = `${process.env.VUE_APP_API}/api/${process.env.VUE_APP_PATH}/products?page=${page}`
       this.$http(api)
         .then((res) => {
@@ -104,6 +112,7 @@ export default {
         .catch((error) => {
           alert(error.data.message)
         })
+      this.$refs.Loading.ToggleLoading('off')
     },
     addToCart (id, qty = 1) {
       const api = `${process.env.VUE_APP_API}/api/${process.env.VUE_APP_PATH}/cart`
