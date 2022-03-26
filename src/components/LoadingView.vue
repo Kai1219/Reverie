@@ -1,10 +1,10 @@
 <template>
   <div class="vld-parent">
     <loading
-      v-model:active="isLoading"
-      :can-cancel="true"
-      :on-cancel="onCancel"
-      :is-full-page="fullPage">
+      :active="isLoading"
+      :is-full-page="fullPage"
+      color="#839EA9"
+      loader="dots">
     </loading>
   </div>
 </template>
@@ -33,11 +33,8 @@ export default {
       } else {
         setTimeout(() => {
           this.isLoading = false
-        }, 500)
+        }, 1000)
       }
-    },
-    onCancel () {
-      console.log('User cancelled the loader.')
     }
   }
 }
