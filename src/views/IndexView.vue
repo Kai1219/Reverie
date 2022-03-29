@@ -28,10 +28,10 @@
       <div class="title text-center mb-5">
         <h2 class="title"><sapn>熱門推薦</sapn></h2>
       </div>
-      <div class="products container px-5">
-        <div class="row row-cols-1 row-cols-lg-4 g-lg-5">
+      <div class="products container px-sm-5">
+        <div class="row row-cols-2 row-cols-lg-4 g-lg-5">
           <div
-            class="col-6 align-items-center mb-5"
+            class="col align-items-center mb-5"
             v-for="product in products.slice(0, 4)"
             :key="product.id"
           >
@@ -41,37 +41,36 @@
                     </div>
               </router-link>
               <div class="card-body pb-0">
-                <h5 class="card-title text-center">{{ product.title }}</h5>
+                <p class="card-title text-center fs-6">{{ product.title }}</p>
               </div>
               <div class="price text-center">
                 <div v-if="product.origin_price === product.price">
-                    <p class="h5 d-inline">NT${{ product.price }}</p>
+                    <p class="fs-6 d-inline">NT${{ product.price }}</p>
                     </div>
                     <div v-else>
-                      <p class="h5 d-inline">NT${{ product.price }}&nbsp;</p>
+                      <p class="fs-6 d-inline">NT${{ product.price }}&nbsp;</p>
                       <span class="text-decoration-line-through fw-light"
                         >NT${{ product.origin_price }}</span
                       >
                     </div>
-                <div class="btn-group mt-2">
+                <div class="btn-group mt-2 w-100 border border-primary">
                   <button
                     type="button"
-                    class="btn text-dark"
+                    class="btn text-dark w-50"
                     @click="toggleFavorite(product.id)"
                   >
                     <i
-                      class="bi bi-heart-fill"
+                      class="bi bi-heart-fill fs-4 text-danger"
                       v-if="favoriteItems.includes(product.id)"
                     ></i>
-                    <i class="bi bi-heart" v-else></i>
-                    我的最愛
+                    <i class="bi bi-heart fs-4" v-else></i>
                   </button>
                   <button
                     type="button"
-                    class="btn btn-primary"
+                    class="btn btn-primary w-50"
                     @click="addToCart(product.id)"
                   >
-                    加入購物車
+                    <i class="bi bi-cart3 fs-4"></i>
                   </button>
                 </div>
               </div>
@@ -100,7 +99,7 @@
     </section>
     <section class="section-service container py-5">
       <h2 class="text-center title mb-5"><sapn>常見問題</sapn></h2>
-      <div class="services row row-cols-1 row-cols-sm-2 row-cols-md-4 g-5">
+      <div class="services row row-cols-1 row-cols-sm-2 row-cols-md-4 gy-5">
         <div class="col">
           <div class="service text-center py-3">
             <i class="bi bi-bag"></i>
@@ -127,8 +126,10 @@
         </div>
       </div>
     </section>
-  </main>
+  <SuccessToast ref="SuccessToast" :message="toastMessage"></SuccessToast>
+  <ErrorToast ref="ErrorToast" :message="toastMessage"></ErrorToast>
   <Loading ref="Loading"> </Loading>
+  </main>
   <Footer></Footer>
 </template>
 
@@ -168,8 +169,7 @@
 
 /*section-recommend*/
 .card-product .pic img {
-  width: 100%;
-  height: 100%;
+  max-width: 100%;
   object-fit: cover;
 }
 .products .price {
@@ -198,10 +198,10 @@ h2.title sapn:after {
   top: 50%;
 }
 h2.title sapn:before {
-  left: -120%;
+  right: 120%;
 }
 h2.title sapn:after {
-  right: -120%;
+  left: 120%;
 }
 
 .pic{
@@ -249,19 +249,24 @@ import FrontNav from '@/components/FrontNav.vue'
 import Footer from '@/components/FooterView.vue'
 import emitter from '@/libs/emitter'
 import Loading from '@/components/LoadingView.vue'
+import SuccessToast from '@/components/SuccessToast.vue'
+import ErrorToast from '@/components/ErrorToast.vue'
 
 export default {
   name: 'IndexView',
   data () {
     return {
       products: [],
-      favoriteItems: JSON.parse(localStorage.getItem('favorite')) || []
+      favoriteItems: JSON.parse(localStorage.getItem('favorite')) || [],
+      toastMessage: ''
     }
   },
   components: {
     FrontNav,
     Footer,
-    Loading
+    Loading,
+    SuccessToast,
+    ErrorToast
   },
   methods: {
     getProducts () {
@@ -273,7 +278,8 @@ export default {
           emitter.emit('get-cart')
         })
         .catch(() => {
-          alert('請重新整理頁面')
+          this.toastMessage = '發生錯誤，請重新整理'
+          this.$refs.ErrorToast.openToasts()
         })
       this.$refs.Loading.ToggleLoading('off')
     },
@@ -287,11 +293,13 @@ export default {
       this.$http
         .post(api, { data })
         .then((res) => {
-          alert(res.data.message)
+          this.toastMessage = res.data.message
+          this.$refs.SuccessToast.openToasts()
           emitter.emit('get-cart')
         })
         .catch(() => {
-          alert('發生錯誤')
+          this.toastMessage = '發生錯誤，請重新加入購物車'
+          this.$refs.ErrorToast.openToasts()
         })
       this.isLoadingItem = ''
     },

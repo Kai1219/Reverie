@@ -13,28 +13,30 @@
         </li>
       </ol>
     </section>
-    <section class="cart px-2 p-sm-5 pb-sm-2">
+    <section class="cart px-2 p-sm-3 pb-sm-2">
       <table class="table align-middle">
         <div class="thead row">
-          <div class="col-11 col-md-5">商品資料</div>
+          <div class="col-9 col-md-4">商品資料</div>
           <div class="col-12 col-md-2">單件價格</div>
-          <div class="col-6 col-md-2">數量</div>
-          <div class="col-6 col-md-2">小計</div>
-          <div class="col-1 col-md-1 mb-5"></div>
+          <div class="col-6 col-md-3">數量</div>
+          <div class="col-6 col-md-3">小計</div>
           <hr />
         </div>
         <div
-          class="row p-5 p-sm-3 align-items-center"
+          class="row p-3 align-items-center position-relative"
           v-for="item in cartData.carts"
           :key="item.id"
         >
-          <div class="col-11 col-md-5">
-            <div class="row">
-              <img :src="item.product.imageUrl" alt="" class="w-50 col" />
-              <p class="d-inline-block col my-auto text-center">
-                {{ item.product.title }}
-              </p>
-            </div>
+          <div class="col-5 col-md-2">
+            <div
+              class="pic ratio ratio-1x1"
+              :style="{ backgroundImage: `url(${item.product.imageUrl})` }"
+            ></div>
+          </div>
+          <div class="col-7 col-md-2">
+            <p class="d-inline-block col my-auto text-center">
+              {{ item.product.title }}
+            </p>
           </div>
           <div class="col-12 col-md-2 order-md-2 order-3">
             <div v-if="item.product.origin_price === item.product.price">
@@ -49,7 +51,7 @@
               >
             </div>
           </div>
-          <div class="col-6 col-md-2 order-md-3 order-4">
+          <div class="col-8 col-md-3 order-md-3 order-4">
             <div class="input-group input-group-sm">
               <div class="input-group mb-3">
                 <select
@@ -72,10 +74,10 @@
               </div>
             </div>
           </div>
-          <div class="col-6 col-md-2 order-md-4 order-4">
+          <div class="col-4 col-md-3 order-md-4 order-4">
             <p>{{ item.total }}元</p>
           </div>
-          <div class="col-1 col-md-1 order-md-5 order-2">
+          <div class="position-absolute top-0 end-0 text-end">
             <button type="button" class="cancel" @click="delCartItem(item)">
               <i class="bi bi-x-square fs-5 text-danger"></i>
             </button>
@@ -99,24 +101,37 @@
               />
             </div>
             <div class="col-auto">
-              <button type="submit" class="btn btn-primary mb-3" @click="discount">套用</button>
+              <button
+                type="submit"
+                class="btn btn-primary mb-3"
+                @click="discount"
+              >
+                套用
+              </button>
             </div>
           </form>
           <div class="text-success text-end" v-else>
-            <button type="button" class="cancel d-inline" @click="delDiscount()">
+            <button
+              type="button"
+              class="cancel d-inline"
+              @click="delDiscount()"
+            >
               <i class="bi bi-x-square fs-5 text-danger"></i>
             </button>
-            <p v-if="discountCoupon.code" class="d-inline">已套用優惠券:{{discountCoupon.code}}</p>
-            <p>-{{cartData.total-cartData.final_total}}</p>
+            <p v-if="discountCoupon.code" class="d-inline">
+              已套用優惠券:{{ discountCoupon.code }}
+            </p>
+            <p>-{{ cartData.total - cartData.final_total }}</p>
           </div>
         </div>
         <div class="d-flex justify-content-between align-items-center mt-5">
           <button type="button" class="btn btn-delete-all" @click="delCartAll">
             清空購物車
           </button>
-          <p class="fw-bold fs-4">合計:NT$
-            <span v-if="discountCoupon">{{cartData.final_total}}</span>
-            <span v-else>{{cartData.total}}</span>
+          <p class="fw-bold fs-4">
+            合計:NT$
+            <span v-if="discountCoupon">{{ cartData.final_total }}</span>
+            <span v-else>{{ cartData.total }}</span>
           </p>
         </div>
       </div>
@@ -305,7 +320,9 @@ export default {
           this.getCart()
         })
         .catch(() => {
-          alert('您的優惠券無效。請重新檢查代碼是否填寫有誤及英文字母大小寫是否符合。')
+          alert(
+            '您的優惠券無效。請重新檢查代碼是否填寫有誤及英文字母大小寫是否符合。'
+          )
         })
     },
     delDiscount () {

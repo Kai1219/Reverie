@@ -1,6 +1,6 @@
 <template>
   <section
-    class="form col-md-8 px-2 py-5 p-sm-5 pb-sm-2 mx-auto row justify-content-center"
+    class="form col-md-8 py-5 p-sm-5 pb-sm-2 mx-auto row justify-content-center"
   >
     <h3 class="mb-4">訂購資訊</h3>
     <v-form class="col-11" v-slot="{ errors }" @submit="submitorder">
@@ -39,7 +39,7 @@
           class="form-control"
           name="電話"
           id="tel"
-          placeholder="請輸入電話"
+          placeholder="請輸入手機號碼:09XXXXXXXX"
           :class="{ 'is-invalid': errors['電話'] }"
           rules="min:8|max:10|required"
           v-model="orderform.user.tel"
@@ -85,6 +85,12 @@
   background-color: #fff;
   box-shadow: 0 0 1rem #bababa;
   border: 20px solid #aac1ca;
+}
+
+@media screen and (max-width: 576px) {
+  .form {
+  border: 10px solid #aac1ca;
+  }
 }
 </style>
 

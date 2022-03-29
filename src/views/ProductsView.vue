@@ -1,5 +1,5 @@
 <template>
-  <main class="">
+  <main>
     <section class="section-top mb-5">
       <div class="bg-top"></div>
     </section>
@@ -8,7 +8,7 @@
         <ProductsList @get-category="getCategory"></ProductsList>
         <div class="products-items col-sm-9">
           <div class="products">
-            <div class="row row-cols-1 row-cols-lg-3 g-lg-5">
+            <div class="row row-cols-2 row-cols-lg-3 g-lg-5">
               <div
                 class="col align-items-center mb-5"
                 v-for="product in products"
@@ -16,40 +16,47 @@
               >
                 <div class="card-product" style="">
                   <router-link :to="`/product/${product.id}`">
-                    <div class="pic ratio ratio-1x1" :style="{backgroundImage:`url(${product.imageUrl})`}">
-                    </div>
+                    <div
+                      class="pic ratio ratio-1x1"
+                      :style="{ backgroundImage: `url(${product.imageUrl})` }"
+                    ></div>
                   </router-link>
                   <div class="card-body pb-0">
-                    <h5 class="card-title text-center">{{ product.title }}
-                      <span class="badge bg-secondary rounded-pill">{{product.category}}</span>
-                    </h5>
+                    <p class="card-title text-center fs-6">
+                      {{ product.title }}
+                      <span class="badge bg-secondary rounded-pill">{{
+                        product.category
+                      }}</span>
+                    </p>
                   </div>
                   <div class="price text-center">
                     <div v-if="product.origin_price === product.price">
-                      <p class="h5 d-inline">NT${{ product.price }}</p>
+                      <p class="fs-6 d-inline">NT${{ product.price }}</p>
                     </div>
                     <div v-else>
-                      <p class="h5 d-inline">NT${{ product.price }}&nbsp;</p>
+                      <p class="fs-6 d-inline">NT${{ product.price }}&nbsp;</p>
                       <span class="text-decoration-line-through fw-light"
                         >NT${{ product.origin_price }}</span
                       >
                     </div>
-                    <div class="btn-group mt-2">
+                    <div class="btn-group mt-2  w-100 border border-primary">
                       <button
                         type="button"
-                        class="btn text-dark"
+                        class="btn text-dark w-50"
                         @click="toggleFavorite(product.id)"
                       >
-                      <i class="bi bi-heart-fill" v-if="favoriteItems.includes(product.id)"></i>
-                      <i class="bi bi-heart" v-else></i>
-                        我的最愛
+                        <i
+                          class="bi bi-heart-fill fs-4 text-danger"
+                          v-if="favoriteItems.includes(product.id)"
+                        ></i>
+                        <i class="bi bi-heart fs-4" v-else></i>
                       </button>
                       <button
                         type="button"
-                        class="btn btn-primary"
+                        class="btn btn-primary w-50"
                         @click="addToCart(product.id)"
                       >
-                        加入購物車
+                        <i class="bi bi-cart3 fs-4"></i>
                       </button>
                     </div>
                   </div>
@@ -57,10 +64,15 @@
               </div>
             </div>
           </div>
-          <Pagination :pages="pagination" @emit-pages="getProducts"></Pagination>
+          <Pagination
+            :pages="pagination"
+            @emit-pages="getProducts"
+          ></Pagination>
         </div>
       </div>
     </section>
+    <SuccessToast ref="SuccessToast" :message="toastMessage"></SuccessToast>
+    <ErrorToast ref="ErrorToast" :message="toastMessage"></ErrorToast>
     <Loading ref="Loading"> </Loading>
   </main>
 </template>
@@ -73,7 +85,7 @@
   background-repeat: no-repeat;
   background-position: center center;
 }
-.pic{
+.pic {
   background-size: cover;
   background-repeat: no-repeat;
   background-position: center center;
@@ -85,6 +97,8 @@ import ProductsList from '@/components/ProductsList.vue'
 import Pagination from '@/components/PaginationVuew.vue'
 import emitter from '@/libs/emitter'
 import Loading from '@/components/LoadingView.vue'
+import SuccessToast from '@/components/SuccessToast.vue'
+import ErrorToast from '@/components/ErrorToast.vue'
 export default {
   name: 'ProductsView',
   data () {
@@ -92,13 +106,16 @@ export default {
       products: [],
       pagination: {},
       isLoadingItem: '',
-      favoriteItems: JSON.parse(localStorage.getItem('favorite')) || []
+      favoriteItems: JSON.parse(localStorage.getItem('favorite')) || [],
+      toastMessage: ''
     }
   },
   components: {
     ProductsList,
     Pagination,
-    Loading
+    Loading,
+    SuccessToast,
+    ErrorToast
   },
   methods: {
     getProducts (page = 1) {
@@ -109,8 +126,9 @@ export default {
           this.products = res.data.products
           this.pagination = res.data.pagination
         })
-        .catch((error) => {
-          alert(error.data.message)
+        .catch(() => {
+          this.toastMessage = '發生錯誤，請重新整理'
+          this.$refs.ErrorToast.openToasts()
         })
       this.$refs.Loading.ToggleLoading('off')
     },
@@ -124,11 +142,13 @@ export default {
       this.$http
         .post(api, { data })
         .then((res) => {
-          alert(res.data.message)
+          this.toastMessage = res.data.message
+          this.$refs.SuccessToast.openToasts()
           emitter.emit('get-cart')
         })
         .catch(() => {
-          alert('發生錯誤')
+          this.toastMessage = '發生錯誤，請重新加入購物車'
+          this.$refs.ErrorToast.openToasts()
         })
       this.isLoadingItem = ''
     },
@@ -141,8 +161,9 @@ export default {
         .then((res) => {
           this.products = res.data.products
         })
-        .catch((error) => {
-          alert(error.data.message)
+        .catch(() => {
+          this.toastMessage = '發生錯誤，請重新選擇'
+          this.$refs.ErrorToast.openToasts()
         })
     },
     toggleFavorite (id) {

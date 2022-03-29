@@ -37,9 +37,9 @@
       </div>
     </section>
     <section class="mt-5">
-      <div class="container px-4">
-        <div class="row gx-5">
-          <div class="col">
+      <div class="container">
+        <div class="row">
+          <div class="col col-sm-6">
             <div class="order bg-light">
               <table class="table caption-top">
                 <caption class="fs-5 bg-primary mb-2 px-3 text-white">
@@ -47,79 +47,80 @@
                 </caption>
                 <thead class="d-none d-lg-block d-xl-lg-block border-0">
                   <tr class="d-flex px-5 row">
-                    <th scope="col" class="col-12 col-lg-8">商品資料</th>
-                    <th scope="col" class="col-6 col-lg-2">數量</th>
-                    <th scope="col" class="col-6 col-lg-2">小計</th>
+                    <th scope="col" class="col-12 col-md-6">商品資料</th>
+                    <th scope="col" class="col-6 col-md-3">數量</th>
+                    <th scope="col" class="col-6 col-md-3">小計</th>
                   </tr>
                 </thead>
                 <tbody class="border-0">
                   <tr
-                    class=" px-5 row text-center "
+                    class=" px-md-5 row align-items-center text-center g-0"
                     v-for="item in orderData.products"
                     :key="item.id"
                   >
-                    <th scope="row" class="col-12 col-lg-8 row">
-                      <img
-                        :src="item.product.imageUrl"
-                        alt=""
-                        class="w-50 col"
-                      />
-                      <p class="d-inline-block col my-auto">
-                        {{ item.product.title }}
-                      </p>
+                    <th scope="row" class="col-5 col-md-3">
+                      <div
+                      class="pic ratio ratio-1x1"
+                      :style="{ backgroundImage: `url(${item.product.imageUrl})` }"
+                      ></div>
                     </th>
-                    <td class="col-6 col-lg-2 row flex-grow-1">
+                    <td class="col-7 col-md-3">
+                    <p class="d-inline-block col my-auto text-center">
+                      {{ item.product.title }}
+                    </p>
+                    </td>
+                    <td class="col-6 col-md-2 order-md-3">
                       <p class="my-auto">{{ item.qty }}{{ item.product.unit }}</p>
                     </td>
-                    <td class="col-6 col-lg-2 row flex-grow-1">
+                    <td class="col-6 col-md-4 order-md-3">
                       <p class="my-auto">NT${{ item.total }}元</p>
                     </td>
                   </tr>
                 </tbody>
-                 <tfooter class="row">
-                    <td class="px-5">
+                 <tfoot class="row">
+                    <td class="px-sm-5">
                       <p class="text-end fw-bold">合計:NT${{ orderData.total }}</p>
                     </td>
-                  </tfooter>
+                  </tfoot>
               </table>
             </div>
           </div>
-          <div class="col">
+          <div class="col col-sm-6">
             <div class="order bg-light">
               <table class="table caption-top">
                 <caption class="fs-5 bg-primary mb-2 px-3 text-white">
                   顧客資訊
                 </caption>
                 <tbody class="border-0">
-                  <tr class="d-flex px-5">
+                  <tr class="">
                     <th scope="row" class="col-6 col-lg-3 text-center">
                       訂購日期
                     </th>
                     <td class="col-6 col-lg-9">{{ $filters.date(orderData.create_at) }}</td>
                   </tr>
-                  <tr class="d-flex px-5">
+                  <tr class="">
                     <th scope="row" class="col-6 col-lg-3 text-center">姓名</th>
                     <td class="col-6 col-lg-9">{{ orderData.user.name }}</td>
                   </tr>
-                  <tr class="d-flex px-5">
+                  <tr class="">
                     <th scope="row" class="col-6 col-lg-3 text-center">電話</th>
                     <td class="col-6 col-lg-9">{{ orderData.user.tel }}</td>
                   </tr>
-                  <tr class="d-flex px-5">
+                  <tr class="">
                     <th scope="row" class="col-6 col-lg-3 text-center">
                       Email
                     </th>
                     <td class="col-6 col-lg-9">{{ orderData.user.email }}</td>
                   </tr>
-                  <tr class="d-flex px-5">
+                  <tr class="">
                     <th scope="row" class="col-6 col-lg-3 text-center">地址</th>
                     <td class="col-6 col-lg-9">{{ orderData.user.address }}</td>
                   </tr>
-                  <tr class="d-flex px-5">
+                  <tr class="">
                     <th scope="row" class="col-6 col-lg-3 text-center">留言</th>
                     <td class="col-6 col-lg-9">{{ orderData.user.message }}</td>
                   </tr>
-                  <tr class="d-flex px-5">
+                  <tr class="">
                     <th scope="row" class="col-6 col-lg-3 text-center">
                       付款狀態
                     </th>
@@ -187,7 +188,8 @@
 }
 
 thead, tbody, tfoot, tr, td, th{
-  border-color: #d5d5d5;
+  border-top: none;
+  border-bottom: none;
 }
 
 .order {
@@ -229,13 +231,11 @@ export default {
     getOrder () {
       this.$refs.Loading.ToggleLoading('on')
       const { Id } = this.$route.params
-      console.log('id', this.orderData.id)
       if (Id) {
         const api = `${process.env.VUE_APP_API}/api/${process.env.VUE_APP_PATH}/order/${Id}`
         this.$http(api)
           .then((res) => {
             this.orderData = res.data.order
-            console.log('orderData', this.orderData)
           })
           .catch(() => {
             // alert(error.data.message)
@@ -270,7 +270,6 @@ export default {
   },
   mounted () {
     this.getOrder()
-    console.log('id', this.orderData.id)
   }
 }
 </script>

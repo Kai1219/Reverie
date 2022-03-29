@@ -1,6 +1,6 @@
 <template>
   <nav
-    class="navbar navbar-expand-lg navbar-light bg-light sticky-top shadow-sm"
+    class="navbar navbar-expand-lg navbar-light bg-light sticky-top shadow-sm" style="z-index: 10"
   >
     <div class="container justify-content-end">
       <div class="sr-only">
@@ -71,7 +71,7 @@ body {
   width: 10rem;
 }
 
-.bi-cart3 {
+.nav-item .bi-cart3 {
   font-size: 2rem;
 }
 

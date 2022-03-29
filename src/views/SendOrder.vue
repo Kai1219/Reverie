@@ -43,28 +43,29 @@
               <div class="cart px-2 p-sm-5 pb-sm-2">
                 <table class="table align-middle">
                   <div class="thead row">
-                    <div class="col-12 col-md-6">商品資料</div>
+                    <div class="col-12 col-md-4">商品資料</div>
                     <div class="col-12 col-md-2">單件價格</div>
-                    <div class="col-6 col-md-2">數量</div>
-                    <div class="col-6 col-md-2">小計</div>
+                    <div class="col-6 col-md-3">數量</div>
+                    <div class="col-6 col-md-3">小計</div>
                     <hr />
                   </div>
                   <div
-                    class="row p-5 p-sm-3 align-items-center"
+                    class="row p-3 align-items-center"
                     v-for="item in cartData.carts"
                     :key="item.id"
                   >
-                    <div class="col-12 col-md-6">
-                      <div class="row">
-                        <img
-                          :src="item.product.imageUrl"
-                          alt=""
-                          class="w-50 col"
-                        />
-                        <p class="d-inline-block col my-auto text-center">
-                          {{ item.product.title }}
-                        </p>
-                      </div>
+                    <div class="col-5 col-md-2">
+                      <div
+                        class="pic ratio ratio-1x1"
+                        :style="{
+                          backgroundImage: `url(${item.product.imageUrl})`
+                        }"
+                      ></div>
+                    </div>
+                    <div class="col-7 col-md-2">
+                      <p class="d-inline-block col my-auto text-center">
+                        {{ item.product.title }}
+                      </p>
                     </div>
                     <div class="col-12 col-md-2 order-md-2 order-3">
                       <div
@@ -83,19 +84,24 @@
                         >
                       </div>
                     </div>
-                    <div class="col-6 col-md-2 order-md-3 order-4">
+                    <div class="col-8 col-md-3 order-md-3 order-4">
                       <p>{{ item.qty }}{{ item.product.unit }}</p>
                     </div>
-                    <div class="col-6 col-md-2 order-md-4 order-4">
+                    <div class="col-4 col-md-3 order-md-4 order-4">
                       <p>{{ item.total }}元</p>
                     </div>
                   </div>
                 </table>
                 <div class="my-3">
                   <div class="d-flex flex-column align-items-end">
-                    <div class="text-success text-end" v-if="discountCoupon.code">
-                      <p class="d-inline">已套用優惠券:{{discountCoupon.code}}</p>
-                      <p>-{{cartData.total-cartData.final_total}}</p>
+                    <div
+                      class="text-success text-end"
+                      v-if="discountCoupon.code"
+                    >
+                      <p class="d-inline">
+                        已套用優惠券:{{ discountCoupon.code }}
+                      </p>
+                      <p>-{{ cartData.total - cartData.final_total }}</p>
                     </div>
                     <p class="fw-normal">合計:NT${{ cartData.final_total }}</p>
                   </div>
@@ -170,7 +176,6 @@
   border: 1px solid #eaeaea;
   color: #839ea9;
 }
-
 </style>
 
 <script>

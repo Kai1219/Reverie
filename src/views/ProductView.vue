@@ -3,9 +3,9 @@
     <section class="section-top mb-5">
       <div class="bg-top"></div>
     </section>
-    <section class="container p-5">
+    <section class="container">
       <div class="row gx-5">
-        <div class="products-items col-10 mx-auto">
+        <div class="products-items col">
           <div class="row">
             <nav aria-label="breadcrumb">
               <ol class="breadcrumb">
@@ -20,10 +20,10 @@
                 </li>
               </ol>
             </nav>
-            <div class="col col-md-6 px-5">
+            <div class="col col-md-6 px-lg-5">
               <ProductSwiper :swiperProduct="product"></ProductSwiper>
             </div>
-            <div class="col col-md-6 px-5 product-content">
+            <div class="col col-md-6 px-lg-5 product-content mt-5">
               <h2>{{ product.title }}</h2>
               <span class="badge bg-secondary rounded-pill">{{
                 product.category
@@ -61,8 +61,11 @@
                   class="btn text-dark my-3"
                   @click="toggleFavorite(product.id)"
                 >
-                  <i class="bi bi-heart-fill" v-if="favoriteItems.includes(product.id)"></i>
-                      <i class="bi bi-heart" v-else></i>
+                  <i
+                    class="bi bi-heart-fill fs-4"
+                    v-if="favoriteItems.includes(product.id)"
+                  ></i>
+                  <i class="bi bi-heart" v-else></i>
                   我的最愛
                 </button>
               </div>
@@ -71,8 +74,10 @@
         </div>
       </div>
     </section>
+    <SuccessToast ref="SuccessToast" :message="toastMessage"></SuccessToast>
+    <ErrorToast ref="ErrorToast" :message="toastMessage"></ErrorToast>
+    <Loading ref="Loading"></Loading>
   </main>
-  <Loading ref="Loading"> </Loading>
 </template>
 <style lang="scss">
 .breadcrumb a {
@@ -83,17 +88,23 @@
 import ProductSwiper from '@/components/ProductSwiper.vue'
 import emitter from '@/libs/emitter'
 import Loading from '@/components/LoadingView.vue'
+import SuccessToast from '@/components/SuccessToast.vue'
+import ErrorToast from '@/components/ErrorToast.vue'
 export default {
   name: 'ProductView',
   data () {
     return {
       product: {},
       qty: 1,
-      favoriteItems: JSON.parse(localStorage.getItem('favorite')) || []
+      favoriteItems: JSON.parse(localStorage.getItem('favorite')) || [],
+      toastMessage: ''
     }
   },
   components: {
-    ProductSwiper, Loading
+    ProductSwiper,
+    Loading,
+    SuccessToast,
+    ErrorToast
   },
   methods: {
     getProducts () {
@@ -104,8 +115,9 @@ export default {
         .then((res) => {
           this.product = res.data.product
         })
-        .catch((error) => {
-          alert(error.data.message)
+        .catch(() => {
+          this.toastMessage = '發生錯誤，請重新整理'
+          this.$refs.ErrorToast.openToasts()
         })
       this.$refs.Loading.ToggleLoading('off')
     },
@@ -119,8 +131,9 @@ export default {
       this.$http
         .post(api, { data })
         .then((res) => {
+          this.toastMessage = res.data.message
+          this.$refs.SuccessToast.openToasts()
           emitter.emit('get-cart')
-          alert(res.data.message)
         })
         .catch(() => {
           alert('請再加入購物車一次')
