@@ -4,7 +4,7 @@
       <div class="bg-top"></div>
     </section>
     <section class="container">
-      <div class="row gx-5">
+      <div class="row">
         <div class="products-items col">
           <div class="row">
             <nav aria-label="breadcrumb">
