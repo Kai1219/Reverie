@@ -200,6 +200,12 @@ thead, tbody, tfoot, tr, td, th{
   background-color: #aac1ca55;
   box-shadow: 0 0 1rem #bababa;
 }
+
+.pic {
+  background-size: cover;
+  background-repeat: no-repeat;
+  background-position: center center;
+}
 </style>
 
 <script>

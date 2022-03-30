@@ -1,22 +1,40 @@
 <template>
   <header>
-    <section class="section-hmoepage">
-      <div class="hmoepage position-relative">
-        <div class="pic mw-100">
-          <img
-            src="https://images.unsplash.com/photo-1602492383546-6f5a348c2a0b?ixlib=rb-1.2.1&ixid=MnwxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8&auto=format&fit=crop&w=1472&q=80"
-            alt=""
-            class="w-100 h-100"
-          />
-        </div>
-        <div class="text-center w-100 h-100">
-          <div
-            class="text shadow-sm position-absolute top-0 start-0 bottom-0 end-0"
-          >
-            <h1 class="mt-5">白日夢</h1>
-            <img src="@/assets/img/r-logo.png" alt="Reverie" class="logo-img w-50" />
-            <p class="my-3">被生活壓的喘不過氣時，來這裡，做個白日夢</p>
-            <button type="button" class="btn btn-primary"><i class="bi bi-arrow-down mt-5"></i></button>
+    <section class="section-hmoepage vh-100">
+      <div class="hmoepage vh-100">
+        <div class="pic w-100 vh-100">
+          <div class="text-center mask w-100 h-100">
+            <div
+              class="text shadow-sm top-0 start-0 bottom-0 end-0 align-items-center"
+            >
+              <h1
+                class="text-white row flex-wrap align-content-between position-relative"
+              >
+                <div class="col">R</div>
+                <div class="col">E</div>
+                <div class="col">V</div>
+                <div class="col-12">E</div>
+                <div class="col">R</div>
+                <div class="col">I</div>
+                <div class="col">E</div>
+              </h1>
+              <p
+                class="bg-primary slogan1 slogan vlr text-white position-absolute"
+              >
+                被生活壓的<br />喘不過氣時
+              </p>
+              <p
+                class="bg-primary slogan2 slogan ps-2 text-white position-absolute"
+              >
+                來這裡
+              </p>
+              <p
+                class="bg-primary slogan3 slogan text-white vlr position-absolute position-absolute"
+              >
+                做個白日夢
+              </p>
+            </div>
+            <div class="scroll"></div>
           </div>
         </div>
       </div>
@@ -26,7 +44,7 @@
   <main>
     <section class="section-recommend container py-5">
       <div class="title text-center mb-5">
-        <h2 class="title"><sapn>熱門推薦</sapn></h2>
+        <h2 class="title">熱門推薦</h2>
       </div>
       <div class="products container px-sm-5">
         <div class="row row-cols-2 row-cols-lg-4 g-lg-5">
@@ -37,22 +55,24 @@
           >
             <div class="card-product" style="">
               <router-link :to="`/product/${product.id}`">
-                <div class="pic ratio ratio-1x1" :style="{backgroundImage:`url(${product.imageUrl})`}">
-                    </div>
+                <div
+                  class="pic ratio ratio-1x1"
+                  :style="{ backgroundImage: `url(${product.imageUrl})` }"
+                ></div>
               </router-link>
               <div class="card-body pb-0">
                 <p class="card-title text-center fs-6">{{ product.title }}</p>
               </div>
               <div class="price text-center">
                 <div v-if="product.origin_price === product.price">
-                    <p class="fs-6 d-inline">NT${{ product.price }}</p>
-                    </div>
-                    <div v-else>
-                      <p class="fs-6 d-inline">NT${{ product.price }}&nbsp;</p>
-                      <span class="text-decoration-line-through fw-light"
-                        >NT${{ product.origin_price }}</span
-                      >
-                    </div>
+                  <p class="fs-6 d-inline">NT${{ product.price }}</p>
+                </div>
+                <div v-else>
+                  <p class="fs-6 d-inline">NT${{ product.price }}&nbsp;</p>
+                  <span class="text-decoration-line-through fw-light"
+                    >NT${{ product.origin_price }}</span
+                  >
+                </div>
                 <div class="btn-group mt-2 w-100 border border-primary">
                   <button
                     type="button"
@@ -79,56 +99,63 @@
         </div>
       </div>
     </section>
-    <section class="section-brand container py-5">
-      <div class="brand row">
-        <div class="pic col-sm-12 col-lg-6">
-          <img
-            src="https://images.unsplash.com/photo-1613687959001-1d02cac9a137?ixlib=rb-1.2.1&ixid=MnwxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8&auto=format&fit=crop&w=735&q=80"
-            alt=""
-            class="w-100 h-100"
-          />
-        </div>
-        <div class="text col-sm-12 col-lg-6 my-auto position-relative">
-          <h2 class="fs-1 mb-3">品牌沿革</h2>
-          <p class="fs-5 mb-4">
-            Reverie，夢幻，或譯作夢想，現在的生活步調越來越快，有時甚至忘了怎麼放鬆，享受生活，希望每個到這裡來的人都能透過品嘗甜點，稍作休息、喘口氣，想起那些美好的時光，做一個白日夢
-          </p>
-          <router-link to="/products" type="button" class="button btn btn-primary position-absolute">查看更多</router-link>
+    <section class="section-brand py-5">
+      <div class="container">
+        <div class="brand row">
+          <div class="pic col-sm-12 col-lg-5">
+            <img
+              src="https://images.unsplash.com/photo-1613687959001-1d02cac9a137?ixlib=rb-1.2.1&ixid=MnwxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8&auto=format&fit=crop&w=735&q=80"
+              alt=""
+              class="w-100 h-100"
+            />
+          </div>
+          <div class="text col-sm-12 col-lg-7 my-auto position-relative">
+            <h2 class="fs-1 mb-3">品牌沿革</h2>
+            <p class="fs-5 mb-4">
+              Reverie，夢幻，或譯作夢想，現在的生活步調越來越快，有時甚至忘了怎麼放鬆，享受生活，希望每個到這裡來的人都能透過品嘗甜點，稍作休息、喘口氣，想起那些美好的時光，做一個白日夢
+            </p>
+            <router-link
+              to="/products"
+              type="button"
+              class="button btn btn-primary position-absolute"
+              >查看更多</router-link
+            >
+          </div>
         </div>
       </div>
     </section>
     <section class="section-service container py-5">
       <h2 class="text-center title mb-5"><sapn>常見問題</sapn></h2>
-      <div class="services row row-cols-1 row-cols-sm-2 row-cols-md-4 gy-5">
-        <div class="col">
-          <div class="service text-center py-3">
-            <i class="bi bi-bag"></i>
-            <h4 class="mt-3">購物流程</h4>
-          </div>
-        </div>
-        <div class="col">
+      <div class="services row row-cols-2 row-cols-md-4 gy-5">
+        <router-link to="/service" class="col">
+            <div class="service text-center py-3">
+              <i class="bi bi-bag"></i>
+              <h4 class="mt-3">購物流程</h4>
+            </div>
+        </router-link>
+        <router-link to="/service" class="col">
           <div class="service text-center py-3">
             <i class="bi bi-exclamation-square"></i>
             <h4 class="mt-3">注意事項</h4>
           </div>
-        </div>
-        <div class="col">
+        </router-link>
+        <router-link to="/service" class="col">
           <div class="service text-center py-3">
             <i class="bi bi-box2"></i>
             <h4 class="mt-3">配送方式</h4>
           </div>
-        </div>
-        <div class="col">
+        </router-link>
+        <router-link to="/service" class="col">
           <div class="service text-center py-3">
             <i class="bi bi-shop"></i>
             <h4 class="mt-3">售後服務</h4>
           </div>
-        </div>
+        </router-link>
       </div>
     </section>
-  <SuccessToast ref="SuccessToast" :message="toastMessage"></SuccessToast>
-  <ErrorToast ref="ErrorToast" :message="toastMessage"></ErrorToast>
-  <Loading ref="Loading"> </Loading>
+    <SuccessToast ref="SuccessToast" :message="toastMessage"></SuccessToast>
+    <ErrorToast ref="ErrorToast" :message="toastMessage"></ErrorToast>
+    <Loading ref="Loading"> </Loading>
   </main>
   <Footer></Footer>
 </template>
@@ -138,36 +165,128 @@
   position: relative;
 }
 
-.hmoepage .pic {
-  max-height: 90vh;
-  overflow: hidden;
+.mask {
+  background-color: #bababa55;
 }
 
-.hmoepage .pic img {
-  object-fit: cover;
+.vlr {
+  writing-mode: vertical-lr;
+}
+
+h1 {
+  font-size: 3.5rem;
+  position: absolute;
+  top: 0;
+}
+
+.slogan {
+  letter-spacing: 0.5rem;
+  text-align: center;
+  font-size: 1.25rem;
+}
+
+.slogan1 {
+  top: -80%;
+  left: 0;
+  text-indent: -3rem;
+  padding: 0.5rem;
+}
+
+.slogan2 {
+  top: 50%;
+  left: 50%;
+  }
+
+.slogan3 {
+  bottom: -100%;
+  right: 0;
+  padding: 1.5rem 1rem 1rem 1rem;
+}
+
+@media screen and (min-width: 768px) {
+  .slogan {
+    font-size: 2rem;
+  }
+
+  .slogan1 {
+    top: -120%;
+    left: -140%;
+  }
+
+  .slogan2 {
+    top: 50%;
+    left: 0%;
+  }
+
+  .slogan3 {
+    bottom: -120%;
+    right: -140%;
+  }
+}
+
+.hmoepage .pic {
+  max-height: 100vh;
+  overflow: hidden;
+  background-image: url('https://images.unsplash.com/photo-1630246077511-349597f03edd?ixlib=rb-1.2.1&ixid=MnwxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8&auto=format&fit=crop&w=1176&q=80');
 }
 
 .hmoepage .text {
-  background-color: #fff9;
-  padding: 0%;
+  background-color: #839ea999;
   position: absolute;
-  width: 90%;
-  height: 90%;
+  width: 15rem;
+  height: 15rem;
   left: 50%;
   top: 50%;
   margin: auto;
-  border: 5px solid #FFF;
+  padding: 10px;
+  border: 0.5rem solid #fff;
 }
 
 @media screen and (min-width: 576px) {
   .hmoepage .text {
-    padding: 10%;
-    border: 10px solid #FFF;
+    border: 10px solid #fff;
     font-size: 1.25rem;
   }
 }
 
-/*section-recommend*/
+/* scroll */
+.scroll {
+  width: 1px;
+  height: 90px;
+  border: 1px solid #fff;
+  position: absolute;
+  bottom: 2rem;
+  right: 3rem;
+}
+
+.scroll::after {
+  content: '';
+  width: 12px;
+  height: 12px;
+  position: absolute;
+  top: 10px;
+  left: 50%;
+  transform: translateX(-50%);
+  background-color: #fff;
+  border-radius: 50%;
+  opacity: 1;
+  animation: wheel 2s infinite;
+}
+
+@keyframes wheel {
+  to {
+    opacity: 0;
+    top: 60px;
+  }
+}
+
+@media screen and (min-width: 576px) {
+  .scroll {
+    right: 5rem;
+  }
+}
+
+/* section-recommend */
 .card-product .pic img {
   max-width: 100%;
   object-fit: cover;
@@ -183,33 +302,32 @@
   flex-grow: 1;
 }
 
-h2.title sapn {
+h2.title {
   position: relative;
 }
 
-h2.title sapn:before,
-h2.title sapn:after {
+h2.title:after {
   content: '';
   display: block;
-  background: #333;
+  background: #839EA9;
   position: absolute;
-  width: 100%;
-  height: 15%;
-  top: 50%;
-}
-h2.title sapn:before {
-  right: 120%;
-}
-h2.title sapn:after {
-  left: 120%;
+  width: 5rem;
+  height: 10%;
+  left: calc(50% - 2.5rem);
+  bottom: -.5rem;
 }
 
-.pic{
+.pic {
   background-size: cover;
   background-repeat: no-repeat;
   background-position: center center;
 }
 /*section-brand*/
+.section-brand{
+background-color: #839EA9;
+color: #fff;
+}
+
 .brand .text {
   background-color: #fff2;
   padding: 10% 10%;
@@ -222,7 +340,7 @@ h2.title sapn:after {
 @media screen and (min-width: 576px) {
   .brand .text {
     padding: 5% 5%;
-    border: 5px solid;
+    border-left: 5px solid #fff;
   }
   .brand .pic {
     padding: 5% 5%;
@@ -236,12 +354,26 @@ h2.title sapn:after {
 /*section-service*/
 
 .services .service {
-  border: 3px solid #333;
+  border: 3px #BABABA;
+  border-style: dashed solid;
 }
 
 .service i {
   font-size: 5rem;
 }
+
+.services a{
+  text-decoration: none;
+}
+
+.services a:hover .service{
+  background: #AAC1CA;
+  color: #fff;
+  border-color:#839EA9;
+  transform: translateY(-5%);
+  transition: 1s;
+}
+
 </style>
 
 <script>

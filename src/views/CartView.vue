@@ -213,6 +213,12 @@
   border: 1px solid #eaeaea;
   color: #839ea9;
 }
+
+.pic {
+  background-size: cover;
+  background-repeat: no-repeat;
+  background-position: center center;
+}
 </style>
 
 <script>

@@ -154,6 +154,12 @@
   background-color: #d5d5d5;
 }
 
+.pic {
+  background-size: cover;
+  background-repeat: no-repeat;
+  background-position: center center;
+}
+
 /*table*/
 @media screen and (max-width: 768px) {
   .thead {

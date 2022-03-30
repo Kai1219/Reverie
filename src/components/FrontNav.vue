@@ -38,7 +38,7 @@
           <li class="nav-item">
             <router-link
               to="/products"
-              class="nav-link active"
+              class="nav-link"
               aria-current="page"
               >商品一覽</router-link
             >
@@ -46,7 +46,7 @@
           <li class="nav-item d-none">
             <router-link to="/about" class="nav-link">關於我們</router-link>
           </li>
-          <li class="nav-item d-none">
+          <li class="nav-item">
             <router-link to="/service" class="nav-link">常見問題</router-link>
           </li>
         </ul>

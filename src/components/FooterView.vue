@@ -13,7 +13,7 @@
 <style lang="scss">
 /*main*/
 main {
-  padding-bottom: 30vh;
+  padding-bottom: 20vh;
 }
 /*footer*/
 footer {
