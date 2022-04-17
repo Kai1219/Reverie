@@ -74,7 +74,7 @@ export default {
       rouletteBtnStatus: true,
       couponStatus: false,
       toastMessage: '',
-      rouletteStatus: JSON.parse(localStorage.getItem('rouletteStatus')) || true
+      rouletteStatus: JSON.parse(localStorage.getItem('rouletteStatus'))
     }
   },
   mixins: [modalMixin],

@@ -218,7 +218,7 @@ export default {
       favoriteItems: JSON.parse(localStorage.getItem('favorite')) || [],
       toastMessage: '',
       showArrow: false,
-      rouletteStatus: JSON.parse(localStorage.getItem('rouletteStatus'))
+      rouletteStatus: JSON.parse(localStorage.getItem('rouletteStatus')) || true
     }
   },
   components: {
@@ -292,9 +292,9 @@ export default {
       })
     },
     openRoulette () {
+      this.rouletteStatus = JSON.parse(localStorage.getItem('rouletteStatus'))
       if (this.rouletteStatus === true) {
         this.$refs.RouletteWheel.openModal()
-        this.rouletteStatus = false
       }
     }
   },
