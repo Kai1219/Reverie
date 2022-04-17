@@ -1,5 +1,8 @@
 <template>
-  <main class="container">
+  <section class="section-top mb-5">
+    <div class="bg-top banner-order pic"></div>
+  </section>
+  <main class="container mb-5">
     <section class="cart-progress my-5">
       <ol class="progress-list container row g-0">
         <li class="col-4">
@@ -9,11 +12,11 @@
           <span class="step mb-2 text-white">2</span>填寫資料
         </li>
         <li class="col-4 active">
-          <span class="step mb-2 text-white">3</span>訂單確認
+          <span class="step mb-2 text-white">3</span>訂單完成
         </li>
       </ol>
     </section>
-    <section class="">
+    <section>
       <div class="thank-text p-5 d-flex flex-column align-items-center">
         <h2 v-if="orderData.is_paid" class="text-success">付款完成!</h2>
         <h2 v-else>訂購完成!!</h2>
@@ -30,7 +33,7 @@
           ></span
         >
         <span v-else
-          ><button class="btn btn-primary" @click="goPaid()">
+          ><button type="button" class="btn btn-primary" @click="goPaid()">
             確定付款
           </button></span
         >
@@ -54,35 +57,39 @@
                 </thead>
                 <tbody class="border-0">
                   <tr
-                    class=" px-md-5 row align-items-center text-center g-0"
+                    class="px-md-5 row align-items-center text-center g-0"
                     v-for="item in orderData.products"
                     :key="item.id"
                   >
                     <th scope="row" class="col-5 col-md-3">
                       <div
-                      class="pic ratio ratio-1x1"
-                      :style="{ backgroundImage: `url(${item.product.imageUrl})` }"
+                        class="pic ratio ratio-1x1"
+                        :style="{
+                          backgroundImage: `url(${item.product.imageUrl})`
+                        }"
                       ></div>
                     </th>
                     <td class="col-7 col-md-3">
-                    <p class="d-inline-block col my-auto text-center">
-                      {{ item.product.title }}
-                    </p>
+                      <p class="d-inline-block col my-auto text-center">
+                        {{ item.product.title }}
+                      </p>
                     </td>
                     <td class="col-6 col-md-2 order-md-3">
-                      <p class="my-auto">{{ item.qty }}{{ item.product.unit }}</p>
+                      <p class="my-auto">
+                        {{ item.qty }}{{ item.product.unit }}
+                      </p>
                     </td>
                     <td class="col-6 col-md-4 order-md-3">
                       <p class="my-auto">NT${{ item.total }}元</p>
                     </td>
                   </tr>
                 </tbody>
-                 <tfoot class="row">
-                    <td class="px-sm-5">
-                      <p class="text-end fw-bold">合計:NT${{ orderData.total }}</p>
-                    </td>
-                  </tfoot>
               </table>
+              <div class="row">
+                <div class="px-sm-5">
+                  <p class="text-end fw-bold">合計:NT${{ orderData.total }}</p>
+                </div>
+              </div>
             </div>
           </div>
           <div class="col col-sm-6">
@@ -92,35 +99,37 @@
                   顧客資訊
                 </caption>
                 <tbody class="border-0">
-                  <tr class="">
+                  <tr>
                     <th scope="row" class="col-6 col-lg-3 text-center">
                       訂購日期
                     </th>
-                    <td class="col-6 col-lg-9">{{ $filters.date(orderData.create_at) }}</td>
+                    <td class="col-6 col-lg-9">
+                      {{ $filters.date(orderData.create_at) }}
+                    </td>
                   </tr>
-                  <tr class="">
+                  <tr>
                     <th scope="row" class="col-6 col-lg-3 text-center">姓名</th>
                     <td class="col-6 col-lg-9">{{ orderData.user.name }}</td>
                   </tr>
-                  <tr class="">
+                  <tr>
                     <th scope="row" class="col-6 col-lg-3 text-center">電話</th>
                     <td class="col-6 col-lg-9">{{ orderData.user.tel }}</td>
                   </tr>
-                  <tr class="">
+                  <tr>
                     <th scope="row" class="col-6 col-lg-3 text-center">
                       Email
                     </th>
                     <td class="col-6 col-lg-9">{{ orderData.user.email }}</td>
                   </tr>
-                  <tr class="">
+                  <tr>
                     <th scope="row" class="col-6 col-lg-3 text-center">地址</th>
                     <td class="col-6 col-lg-9">{{ orderData.user.address }}</td>
                   </tr>
-                  <tr class="">
+                  <tr>
                     <th scope="row" class="col-6 col-lg-3 text-center">留言</th>
                     <td class="col-6 col-lg-9">{{ orderData.user.message }}</td>
                   </tr>
-                  <tr class="">
+                  <tr>
                     <th scope="row" class="col-6 col-lg-3 text-center">
                       付款狀態
                     </th>
@@ -138,11 +147,96 @@
         </div>
       </div>
     </section>
+    <ErrorToast ref="ErrorToast" :message="toastMessage"></ErrorToast>
     <Loading ref="Loading"> </Loading>
-    <!--Modal-->
-    <paidSuccessModal ref="successModal"></paidSuccessModal>
+    <PaidSuccessModal ref="successModal"></PaidSuccessModal>
   </main>
 </template>
+
+<script>
+import emitter from '@/libs/emitter'
+import PaidSuccessModal from '@/components/Modal/PaidSuccessModal.vue'
+import ErrorToast from '@/components/ErrorToast.vue'
+import Loading from '@/components/LoadingView.vue'
+export default {
+  name: 'SendOrder',
+  data () {
+    return {
+      orderData: {
+        create_at: '',
+        id: '',
+        is_paid: false,
+        message: '',
+        products: [],
+        total: '',
+        user: {
+          address: '',
+          email: '',
+          name: '',
+          tel: ''
+        }
+      },
+      toastMessage: ''
+    }
+  },
+  components: { PaidSuccessModal, Loading, ErrorToast },
+  methods: {
+    getOrder () {
+      this.$refs.Loading.ToggleLoading('on')
+      const { Id } = this.$route.params
+      if (Id) {
+        const api = `${process.env.VUE_APP_API}/api/${process.env.VUE_APP_PATH}/order/${Id}`
+        this.$http(api)
+          .then((res) => {
+            this.orderData = res.data.order
+          })
+          .catch(() => {
+            this.toastMessage = '發生錯誤，請重新整理'
+            this.$refs.ErrorToast.openToasts()
+          })
+      } else {
+        this.toastMessage = '購物車為空，帶您回到購物頁面'
+        this.$refs.ErrorToast.openToasts()
+        setTimeout(() => {
+          this.$router.push('/products')
+        }, 3000)
+      }
+      this.$refs.Loading.ToggleLoading('off')
+    },
+    goPaid () {
+      this.$refs.Loading.ToggleLoading('on')
+      if (this.orderData.id) {
+        const api = `${process.env.VUE_APP_API}/api/${process.env.VUE_APP_PATH}/pay/${this.orderData.id}`
+        this.$http
+          .post(api)
+          .then(() => {
+            this.$refs.Loading.ToggleLoading('off')
+            this.getOrder()
+            emitter.emit('get-cart')
+            this.$refs.successModal.openModal()
+            this.$router.push({
+              name: 'paid',
+              params: { Id: `${this.orderData.id}` }
+            })
+          })
+          .catch(() => {
+            this.toastMessage = '請重新付款'
+            this.$refs.ErrorToast.openToasts()
+          })
+      } else {
+        this.toastMessage = '購物車為空，帶您回到購物頁面'
+        this.$refs.ErrorToast.openToasts()
+        setTimeout(() => {
+          this.$router.push('/products')
+        }, 3000)
+      }
+    }
+  },
+  mounted () {
+    this.getOrder()
+  }
+}
+</script>
 
 <style lang="scss">
 .progress-list li {
@@ -187,7 +281,12 @@
   border-bottom: none;
 }
 
-thead, tbody, tfoot, tr, td, th{
+thead,
+tbody,
+tfoot,
+tr,
+td,
+th {
   border-top: none;
   border-bottom: none;
 }
@@ -200,82 +299,4 @@ thead, tbody, tfoot, tr, td, th{
   background-color: #aac1ca55;
   box-shadow: 0 0 1rem #bababa;
 }
-
-.pic {
-  background-size: cover;
-  background-repeat: no-repeat;
-  background-position: center center;
-}
 </style>
-
-<script>
-import emitter from '@/libs/emitter'
-import paidSuccessModal from '@/components/Modal/PaidSuccessModal.vue'
-import Loading from '@/components/LoadingView.vue'
-export default {
-  name: 'SendOrder',
-  data () {
-    return {
-      orderData: {
-        create_at: '',
-        id: '',
-        is_paid: false,
-        message: '',
-        products: [],
-        total: '',
-        user: {
-          address: '',
-          email: '',
-          name: '',
-          tel: ''
-        }
-      }
-    }
-  },
-  components: { paidSuccessModal, Loading },
-  methods: {
-    getOrder () {
-      this.$refs.Loading.ToggleLoading('on')
-      const { Id } = this.$route.params
-      if (Id) {
-        const api = `${process.env.VUE_APP_API}/api/${process.env.VUE_APP_PATH}/order/${Id}`
-        this.$http(api)
-          .then((res) => {
-            this.orderData = res.data.order
-          })
-          .catch(() => {
-            // alert(error.data.message)
-          })
-      }
-      this.$refs.Loading.ToggleLoading('off')
-    },
-    goPaid () {
-      this.$refs.Loading.ToggleLoading('on')
-      if (this.orderData.id) {
-        const api = `${process.env.VUE_APP_API}/api/${process.env.VUE_APP_PATH}/pay/${this.orderData.id}`
-        this.$http
-          .post(api)
-          .then(() => {
-            this.$refs.Loading.ToggleLoading('off')
-            this.getOrder()
-            emitter.emit('get-cart')
-            this.$refs.successModal.openModal()
-            this.$router.push({
-              name: 'paid',
-              params: { Id: `${this.orderData.id}` }
-            })
-          })
-          .catch((error) => {
-            console.log('error', error)
-            alert('請重新付款')
-          })
-      } else {
-        alert('請選購商品')
-      }
-    }
-  },
-  mounted () {
-    this.getOrder()
-  }
-}
-</script>

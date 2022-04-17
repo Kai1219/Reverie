@@ -17,17 +17,14 @@
             aria-label="Close"
           ></button>
         </div>
-        <div class="modal-body text-center text-success"><i class="bi bi-patch-check "></i>
-        <p class="fs-1">付款成功!</p></div>
+        <div class="modal-body text-center text-success">
+          <i class="bi bi-patch-check"></i>
+          <p class="fs-1">付款成功!</p>
+        </div>
       </div>
     </div>
   </div>
 </template>
-
-<style lang="scss">
-.bi-patch-check{font-size: 10rem;
-}
-</style>
 
 <script>
 import modalMixin from '@/mixins/modalMixin'
@@ -40,3 +37,9 @@ export default {
   mixins: [modalMixin]
 }
 </script>
+
+<style lang="scss">
+.bi-patch-check {
+  font-size: 10rem;
+}
+</style>

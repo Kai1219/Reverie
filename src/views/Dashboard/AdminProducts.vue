@@ -3,7 +3,7 @@
   <section>
     <div class="container">
       <div class="text-end mt-4">
-        <button class="btn btn-primary" @click="openProductModal('create')">
+        <button type="button" class="btn btn-primary" @click="openProductModal('create')">
           建立新的產品
         </button>
       </div>
@@ -129,7 +129,6 @@ export default {
           alert(res.data.message)
         })
         .catch((error) => {
-          console.dir(error)
           alert(error.data.message)
         })
       this.$refs.DelModal.hideModal()

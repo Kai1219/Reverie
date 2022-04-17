@@ -20,9 +20,7 @@
         </div>
         <div class="modal-body">
           <p>
-            是否刪除<strong class="text-danger">{{
-              item.title
-            }}</strong
+            是否刪除<strong class="text-danger">{{ item.title }}</strong
             >?(刪除後將無法復原!!)
           </p>
         </div>

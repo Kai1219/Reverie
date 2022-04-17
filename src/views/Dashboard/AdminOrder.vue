@@ -31,6 +31,7 @@
                     id="`paidSwitch${order.id}`"
                     v-model="order.is_paid"
                     @change="updatePaid(order)"
+                    :disabled = "order.is_paid"
                   />
                   <label class="form-check-label" for="`paidSwitch${order.id}`">
                     <span v-if="order.is_paid">已付款</span>
@@ -76,6 +77,7 @@
   ></DelModal>
   <Pagination :pages="pagination" @emit-pages="getOrders"></Pagination>
 </template>
+
 <script>
 import OrderModal from '@/components/Modal/OrderModal.vue'
 import DelModal from '@/components/Modal/DelModal.vue'
@@ -118,7 +120,6 @@ export default {
       this.isNew = false
       const orderComponent = this.$refs.orderModal
       orderComponent.openModal()
-      console.log(this)
     },
     openDelOrderModal (order) {
       this.tempOrder = { ...order }

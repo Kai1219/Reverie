@@ -74,11 +74,11 @@
                   <input
                     class="form-check-input"
                     type="checkbox"
-                    value=""
                     id="is_enabled"
-                    v-model="temporaryCoupons.is_enabled"
                     :true-value="1"
                     :false-value="0"
+                    v-model="temporaryCoupons.is_enabled"
+                    ref="checkbox"
                   />
                   <label class="form-check-label" for="is_enabled">
                     是否啟用
@@ -132,11 +132,10 @@ export default {
         .then((res) => {
           alert(res.data.message)
           this.$emit('get-data')
-          console.log(res)
+          console.log(this.temporaryCoupons)
           this.modal.hide()
         })
         .catch((error) => {
-          console.dir(error.response.data.message)
           alert(error.response.data.message)
         })
     }
@@ -145,12 +144,17 @@ export default {
     temporaryCoupons () {
       this.tempCoupon = this.temporaryCoupons
       // 將時間格式改為 YYYY-MM-DD
-      const dateAndTime = new Date(this.tempCoupon.due_date * 1000).toISOString().split('T')
+      const dateAndTime = new Date(this.tempCoupon.due_date * 1000)
+        .toISOString()
+        .split('T')
       this.due_date = dateAndTime
     },
     due_date () {
       this.tempCoupon.due_date = Math.floor(new Date(this.due_date) / 1000)
     }
+  },
+  mounted () {
+    console.log(this.$refs.checkbox)
   }
 }
 </script>

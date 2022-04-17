@@ -4,13 +4,11 @@
       :active="isLoading"
       :is-full-page="fullPage"
       color="#839EA9"
-      loader="dots">
+      loader="dots"
+    >
     </loading>
   </div>
 </template>
-
-<style lang="scss">
-</style>
 
 <script>
 import Loading from 'vue-loading-overlay'

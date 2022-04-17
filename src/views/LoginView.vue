@@ -30,13 +30,61 @@
         </div>
         <div class="mt-5 row row-cols-1 row-cols-sm-2 g-2">
           <button class="btn btn-primary col" type="submit">登入</button>
-          <button class="btn btn-secondary col btn-cancel" type="button" @click="backIndex">取消</button>
+          <button
+            class="btn btn-secondary col btn-cancel"
+            type="button"
+            @click="backIndex"
+          >
+            取消
+          </button>
         </div>
       </form>
     </div>
   </div>
+  <SuccessToast ref="SuccessToast" :message="toastMessage"></SuccessToast>
+  <ErrorToast ref="ErrorToast" :message="toastMessage"></ErrorToast>
   <Loading ref="Loading"> </Loading>
 </template>
+
+<script>
+import Loading from '@/components/LoadingView.vue'
+import SuccessToast from '@/components/SuccessToast.vue'
+import ErrorToast from '@/components/ErrorToast.vue'
+export default {
+  name: 'LoginView',
+  data () {
+    return {
+      user: {},
+      toastMessage: ''
+    }
+  },
+  components: { Loading, ErrorToast, SuccessToast },
+  methods: {
+    signIn () {
+      const api = `${process.env.VUE_APP_API}/admin/signin`
+      this.$http
+        .post(api, this.user)
+        .then((res) => {
+          this.toastMessage = res.data.message
+          this.$refs.SuccessToast.openToasts()
+          const { token, expired } = res.data
+          document.cookie = `hexToken=${token}; expires=${new Date(expired)};`
+          setTimeout(() => {
+            this.$router.push('/adminProducts')
+          }, 1000)
+        })
+        .catch(() => {
+          this.toastMessage = '帳號或密碼有誤哦，請重新登入'
+          this.$refs.ErrorToast.openToasts()
+        })
+    },
+
+    backIndex () {
+      this.$router.push('/')
+    }
+  }
+}
+</script>
 
 <style lang="scss">
 .full-screen {
@@ -74,44 +122,11 @@
   line-height: 3;
   border: 1px solid #aaa;
 }
-.btn{
+.btn {
   border: none;
 }
 
-.btn-cancel{
+.btn-cancel {
   background-color: #aaa;
 }
 </style>
-
-<script>
-import Loading from '@/components/LoadingView.vue'
-export default {
-  name: 'LoginView',
-  data () {
-    return {
-      user: {}
-    }
-  },
-  components: { Loading },
-  methods: {
-    signIn () {
-      const api = `${process.env.VUE_APP_API}/admin/signin`
-      this.$http
-        .post(api, this.user)
-        .then((res) => {
-          const { token, expired } = res.data
-          document.cookie = `hexToken=${token}; expires=${new Date(expired)};`
-          this.$router.push('/adminProducts')
-        })
-        .catch((error) => {
-          alert(error.message)
-          console.log(this.$router)
-        })
-    },
-
-    backIndex () {
-      this.$router.push('/')
-    }
-  }
-}
-</script>

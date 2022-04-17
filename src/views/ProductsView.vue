@@ -1,23 +1,65 @@
 <template>
   <main>
     <section class="section-top mb-5">
-      <div class="bg-top"></div>
+      <div class="bg-top banner-products pic"></div>
     </section>
-    <section class="container p-5">
+    <section class="container p-md-5">
       <div class="row gx-5">
-        <ProductsList @get-category="getCategory"></ProductsList>
-        <div class="products-items col-sm-9">
+        <div class="col-md-3 products-list">
+          <div
+            class="list-group mb-5 justify-content-between flex-row flex-md-column"
+          >
+            <a
+              class="list-group-item list-group-item-action"
+              :class="{ active: isActive === 1 }"
+              data-bs-toggle="list"
+              aria-current="true"
+              @click.prevent="getCategory()"
+            >
+              全部商品
+            </a>
+            <a
+              class="list-group-item list-group-item-action"
+              :class="{ active: isActive === 2 }"
+              data-bs-toggle="list"
+              @click.prevent="getCategory('冰淇淋')"
+              >冰淇淋</a
+            >
+            <a
+              class="list-group-item list-group-item-action"
+              :class="{ active: isActive === 3 }"
+              data-bs-toggle="list"
+              @click.prevent="getCategory('冰棒')"
+              >冰棒</a
+            >
+            <a
+              class="list-group-item list-group-item-action"
+              :class="{ active: isActive === 4 }"
+              data-bs-toggle="list"
+              @click.prevent="getCategory('蛋糕')"
+              >蛋糕</a
+            >
+            <a
+              class="list-group-item list-group-item-action"
+              :class="{ active: isActive === 5 }"
+              data-bs-toggle="list"
+              @click.prevent="getCategory('手工酥塔')"
+              >手工酥塔</a
+            >
+          </div>
+        </div>
+        <div class="products-items col-md-9">
           <div class="products">
-            <div class="row row-cols-2 row-cols-lg-3 g-lg-5">
+            <div class="row row-cols-2 row-cols-md-3">
               <div
                 class="col align-items-center mb-5"
                 v-for="product in products"
                 :key="product.id"
               >
-                <div class="card-product" style="">
+                <div class="card-product ">
                   <router-link :to="`/product/${product.id}`">
                     <div
-                      class="pic ratio ratio-1x1"
+                      class="pic ratio ratio-1x1 border rounded-pill border-2 hover-scale"
                       :style="{ backgroundImage: `url(${product.imageUrl})` }"
                     ></div>
                   </router-link>
@@ -39,7 +81,7 @@
                         >NT${{ product.origin_price }}</span
                       >
                     </div>
-                    <div class="btn-group mt-2  w-100 border border-primary">
+                    <div class="btn-group mt-2 w-100 border border-primary">
                       <button
                         type="button"
                         class="btn text-dark w-50"
@@ -71,34 +113,20 @@
         </div>
       </div>
     </section>
+    <ServiceList/>
     <SuccessToast ref="SuccessToast" :message="toastMessage"></SuccessToast>
     <ErrorToast ref="ErrorToast" :message="toastMessage"></ErrorToast>
     <Loading ref="Loading"> </Loading>
   </main>
 </template>
 
-<style lang="scss">
-.bg-top {
-  height: 40vh;
-  background-image: url('https://images.unsplash.com/photo-1471478108131-9b2335c21611?ixlib=rb-1.2.1&ixid=MnwxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8&auto=format&fit=crop&w=1470&q=80');
-  background-size: cover;
-  background-repeat: no-repeat;
-  background-position: center center;
-}
-.pic {
-  background-size: cover;
-  background-repeat: no-repeat;
-  background-position: center center;
-}
-</style>
-
 <script>
-import ProductsList from '@/components/ProductsList.vue'
 import Pagination from '@/components/PaginationVuew.vue'
 import emitter from '@/libs/emitter'
 import Loading from '@/components/LoadingView.vue'
 import SuccessToast from '@/components/SuccessToast.vue'
 import ErrorToast from '@/components/ErrorToast.vue'
+import ServiceList from '@/components/ServiceList.vue'
 export default {
   name: 'ProductsView',
   data () {
@@ -107,15 +135,16 @@ export default {
       pagination: {},
       isLoadingItem: '',
       favoriteItems: JSON.parse(localStorage.getItem('favorite')) || [],
-      toastMessage: ''
+      toastMessage: '',
+      isActive: 1
     }
   },
   components: {
-    ProductsList,
     Pagination,
     Loading,
     SuccessToast,
-    ErrorToast
+    ErrorToast,
+    ServiceList
   },
   methods: {
     getProducts (page = 1) {
@@ -160,6 +189,7 @@ export default {
       this.$http(api)
         .then((res) => {
           this.products = res.data.products
+          this.pagination = res.data.pagination
         })
         .catch(() => {
           this.toastMessage = '發生錯誤，請重新選擇'
@@ -170,22 +200,66 @@ export default {
       const favIndex = this.favoriteItems.findIndex((item) => item === id)
       if (favIndex === -1) {
         this.favoriteItems.push(id)
+        emitter.emit('get-favorites', this.favoriteItems)
       } else {
         this.favoriteItems.splice(favIndex, 1)
+        emitter.emit('get-favorites', this.favoriteItems)
+      }
+    },
+    changeisActive (category) {
+      switch (category) {
+        case '冰淇淋':
+          this.isActive = 2
+          break
+        case '冰棒':
+          this.isActive = 3
+          break
+        case '蛋糕':
+          this.isActive = 4
+          break
+        case '手工酥塔':
+          this.isActive = 5
+          break
+        default:
+          this.isActive = 1
       }
     }
   },
   watch: {
     favoriteItems: {
       handler () {
-        // localStorage的自訂欄位,要存入的JSON內容
         localStorage.setItem('favorite', JSON.stringify(this.favoriteItems))
       },
       deep: true
     }
   },
   mounted () {
-    this.getProducts()
+    this.getCategory(this.$route.query.category)
+    this.changeisActive(this.$route.query.category)
   }
 }
 </script>
+
+<style lang="scss">
+.banner-products {
+  background-image: url('@/assets/img/banner/banner-products.avif');
+}
+
+.list-group {
+  position: sticky;
+  top: 100px;
+  z-index: 3;
+}
+
+@media screen and (max-width: 767px) {
+  .list-group {
+    position: static;
+    top: 0px;
+  }
+  .products-list {
+    position: sticky;
+    top: 80px;
+    z-index: 3;
+  }
+}
+</style>

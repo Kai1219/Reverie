@@ -17,7 +17,9 @@
         :key="i"
         :class="{ active: page === pages.current_page }"
       >
-        <span v-if="page === pages.current_page" class="page-link">{{page}}</span>
+        <span v-if="page === pages.current_page" class="page-link">{{
+          page
+        }}</span>
         <a v-else class="page-link" href="#" @click.prevent="emitPage(page)">{{
           page
         }}</a>
@@ -42,9 +44,6 @@
 <script>
 export default {
   props: ['pages'],
-  data () {
-    return {}
-  },
   methods: {
     emitPage (page) {
       this.$emit('emit-pages', page)

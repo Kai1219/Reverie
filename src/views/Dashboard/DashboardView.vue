@@ -66,9 +66,9 @@ export default {
           .then(() => {
             this.checkSuccess = true
           })
-          .catch((error) => {
-            alert(error.data.message)
-            console.dir(error)
+          .catch(() => {
+            alert('請重新登入')
+            this.$router.push('/login')
           })
       } else {
         alert('您尚未登入。')
@@ -78,7 +78,7 @@ export default {
     signout () {
       document.cookie = 'hexToken=;expires=;'
       alert('已登出')
-      this.$router.push('/products')
+      this.$router.push('/')
     }
   },
   mounted () {

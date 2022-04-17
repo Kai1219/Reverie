@@ -3,7 +3,7 @@
   <section>
     <div class="container">
       <div class="text-end mt-4">
-        <button class="btn btn-primary" @click="openCouponModal('create')">
+        <button type="button" class="btn btn-primary" @click="openCouponModal('create')">
           建立新的優惠碼
         </button>
       </div>
@@ -22,8 +22,8 @@
           <tr v-for="coupon in coupons" :key="coupon.id">
             <td>{{ coupon.title }}</td>
             <td>{{ coupon.code }}</td>
-            <td class="">{{ coupon.percent }}%</td>
-            <td class="">
+            <td>{{ coupon.percent }}%</td>
+            <td>
               {{ $filters.date(coupon.due_date) }}
             </td>
             <td>
@@ -77,7 +77,7 @@ export default {
       coupons: {},
       tempCoupons: {
         title: '',
-        is_enabled: 0,
+        is_enabled: 1,
         percent: 100,
         code: ''
       },
@@ -98,7 +98,6 @@ export default {
         .then((res) => {
           this.coupons = res.data.coupons
           this.pagination = res.data.pagination
-          console.log(res)
         })
         .catch((error) => {
           alert(error.data.message)
@@ -114,12 +113,10 @@ export default {
         this.tempCoupons = {
           due_date: new Date().getTime() / 1000
         }
-        console.log('create', this.tempCoupons)
         this.status = 'create'
       } else if (status === 'edit') {
         this.tempCoupons = { ...coupon }
         CouponComponent.openModal()
-        console.log('edit', this.tempCoupons)
         this.status = 'edit'
       } else if (status === 'delete') {
         this.tempCoupons = { ...coupon }
@@ -136,7 +133,6 @@ export default {
           alert(res.data.message)
         })
         .catch((error) => {
-          console.dir(error)
           alert(error.data.message)
         })
       this.$refs.DelModal.hideModal()

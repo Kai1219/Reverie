@@ -41,7 +41,6 @@
               </div>
               <h3 class="mb-3">多圖新增</h3>
               <div v-if="Array.isArray(temporaryProducts.imagesUrl)">
-                <!--如果temporaryProducts.imagesUrl是一個陣列-->
                 <div
                   class="mb-1"
                   v-for="(image, key) in temporaryProducts.imagesUrl"
@@ -69,6 +68,7 @@
                   "
                 >
                   <button
+                    type="button"
                     class="btn btn-outline-primary btn-sm d-block w-100"
                     @click="temporaryProducts.imagesUrl.push('')"
                   >
@@ -77,6 +77,7 @@
                 </div>
                 <div v-else>
                   <button
+                    type="button"
                     class="btn btn-outline-danger btn-sm d-block w-100"
                     @click="temporaryProducts.imagesUrl.pop()"
                   >
@@ -87,6 +88,7 @@
               <div v-else>
                 <!--如果temporaryProducts.imagesUrl陣列沒有內容-->
                 <button
+                  type="button"
                   class="btn btn-outline-primary btn-sm d-block w-100"
                   @click="createImages"
                 >
@@ -219,19 +221,14 @@
 import modalMixin from '@/mixins/modalMixin'
 export default {
   props: ['temporary-products', 'status'],
-  data () {
-    return {}
-  },
   mixins: [modalMixin],
   methods: {
     saveProduct () {
       let api = ''
       let method = ''
-      // 新增產品
       if (this.status === 'create') {
         api = `${process.env.VUE_APP_API}/api/${process.env.VUE_APP_PATH}/admin/product`
         method = 'post'
-        // 編輯產品
       } else if (this.status === 'edit') {
         api = `${process.env.VUE_APP_API}/api/${process.env.VUE_APP_PATH}/admin/product/${this.temporaryProducts.id}`
         method = 'put'
@@ -244,7 +241,6 @@ export default {
           this.modal.hide()
         })
         .catch((error) => {
-          console.dir(error.response.data.message)
           alert(error.response.data.message)
         })
     },
