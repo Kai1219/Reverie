@@ -263,7 +263,7 @@ export default {
 
 <style lang="scss">
 .banner-order{
-  background-image: url('@/assets/img/banner/banner-order.avif');
+  background-image: url('@/assets/img/banner/banner-order.png');
 }
 
 .progress-list li {

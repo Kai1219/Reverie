@@ -242,7 +242,7 @@ export default {
 
 <style lang="scss">
 .banner-products {
-  background-image: url('@/assets/img/banner/banner-products.avif');
+  background-image: url('@/assets/img/banner/banner-products.png');
 }
 
 .list-group {

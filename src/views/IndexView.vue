@@ -29,7 +29,7 @@
       <div class="brand row px-2 bg-secondary text-dark bg-opacity-10 mb-5">
         <div class="pic col-sm-12 col-lg-6 my-3">
           <img
-            src="@/assets/img/about-img.avif"
+            src="@/assets/img/about-img.jpg"
             alt="關於Reverie"
             class="w-100 h-100 about-img"
           />
@@ -154,7 +154,7 @@
       >
         <div class="pic col-sm-12 col-lg-6 my-3 order-lg-2">
           <img
-            src="@/assets/img/selected-img.avif"
+            src="@/assets/img/selected-img.jpg"
             alt="嚴選極致"
             class="w-100"
           />
@@ -433,19 +433,19 @@ export default {
 }
 
 .ice-cream-link {
-  background-image: url('@/assets/img/ice-cream-link.avif');
+  background-image: url('@/assets/img/ice-cream-link.jpg');
 }
 
 .ice-pop-link {
-  background-image: url('@/assets/img/ice-pop-link.avif');
+  background-image: url('@/assets/img/ice-pop-link.jpg');
 }
 
 .cake-link {
-  background-image: url('@/assets/img/cake-link.avif');
+  background-image: url('@/assets/img/cake-link.jpg');
 }
 
 .tart-link {
-  background-image: url('@/assets/img/tart-link.avif');
+  background-image: url('@/assets/img/tart-link.jpg');
 }
 
 .category .text {

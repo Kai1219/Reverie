@@ -171,7 +171,7 @@ export default {
 
 <style lang="scss">
 .banner-favorite {
-  background-image: url('@/assets/img/banner/banner-favrite.avif');
+  background-image: url('@/assets/img/banner/banner-favrite.png');
 }
 
 /*table*/

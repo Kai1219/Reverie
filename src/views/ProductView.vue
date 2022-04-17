@@ -300,6 +300,6 @@ export default {
 }
 
 .banner-product {
-  background-image: url('@/assets/img/banner/banner-product.avif');
+  background-image: url('@/assets/img/banner/banner-product.png');
 }
 </style>

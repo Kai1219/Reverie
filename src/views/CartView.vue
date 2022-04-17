@@ -320,7 +320,7 @@ export default {
 
 <style lang="scss">
 .banner-cart {
-  background-image: url('@/assets/img/banner/banner-cart.avif');
+  background-image: url('@/assets/img/banner/banner-cart.png');
 }
 /*cart-progress*/
 .progress-list li {

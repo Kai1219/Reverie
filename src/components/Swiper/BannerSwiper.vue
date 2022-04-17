@@ -48,18 +48,18 @@ export default {
 }
 
 .banner-swiper1 {
-  background-image: url('@/assets/img/banner/banner-swiper1.avif');
+  background-image: url('@/assets/img/banner/banner-swiper1.png');
 }
 
 .banner-swiper2 {
-  background-image: url('@/assets/img/banner/banner-swiper2.avif');
+  background-image: url('@/assets/img/banner/banner-swiper2.png');
 }
 
 .banner-swiper3 {
-  background-image: url('@/assets/img/banner/banner-swiper3.avif');
+  background-image: url('@/assets/img/banner/banner-swiper3.png');
 }
 
 .banner-swiper4 {
-  background-image: url('@/assets/img/banner/banner-swiper4.avif');
+  background-image: url('@/assets/img/banner/banner-swiper4.png');
 }
 </style>
