@@ -84,10 +84,26 @@
             </div>
           </div>
           <div class="col-4 col-md-3 order-md-4 order-4 text-center">
-            <p>{{ item.total }}元</p>
+            <div
+              class="d-flex align-items-center"
+              v-if="isLoadingItem === item.id"
+            >
+              <span
+                class="spinner-border me-2 d-none d-sm-block"
+                role="status"
+                aria-hidden="true"
+              ></span>
+              <span>更新中...</span>
+            </div>
+            <p v-else>{{ item.total }}元</p>
           </div>
           <div class="text-end del-item">
-            <button type="button" class="cancel" @click="delCartItem(item)">
+            <button
+              type="button"
+              class="cancel"
+              @click="delCartItem(item)"
+              :disabled="isLoadingItem === item.id"
+            >
               <i class="bi bi-x-square fs-5 text-danger"></i>
             </button>
           </div>
@@ -193,6 +209,7 @@
       </ul>
     </div>
   </div>
+  <SuccessToast ref="SuccessToast" :message="toastMessage"></SuccessToast>
   <ErrorToast ref="ErrorToast" :message="toastMessage"></ErrorToast>
   <Loading ref="Loading"> </Loading>
 </template>
@@ -200,6 +217,7 @@
 <script>
 import emitter from '@/libs/emitter'
 import Loading from '@/components/LoadingView.vue'
+import SuccessToast from '@/components/SuccessToast.vue'
 import ErrorToast from '@/components/ErrorToast.vue'
 export default {
   name: 'CartView',
@@ -218,7 +236,7 @@ export default {
       toastMessage: ''
     }
   },
-  components: { Loading, ErrorToast },
+  components: { Loading, SuccessToast, ErrorToast },
   methods: {
     goToSendOrder () {
       if (this.cartData.carts.length <= 0) {
@@ -255,16 +273,21 @@ export default {
       this.$http
         .put(api, { data })
         .then(() => {
+          this.toastMessage = '購物車更新成功'
+          this.$refs.SuccessToast.openToasts()
           this.getCart()
         })
         .catch(() => {
           this.toastMessage = '發生錯誤，請重新整理'
           this.$refs.ErrorToast.openToasts()
         })
-      this.isLoadingItem = ''
+      setTimeout(() => {
+        this.isLoadingItem = ''
+      }, 1000)
     },
     delCartItem (item) {
       const api = `${process.env.VUE_APP_API}/api/${process.env.VUE_APP_PATH}/cart/${item.id}`
+      this.isLoadingItem = item.id
       this.$http
         .delete(api)
         .then(() => {
@@ -275,8 +298,12 @@ export default {
           this.toastMessage = error.data.message
           this.$refs.ErrorToast.openToasts()
         })
+      setTimeout(() => {
+        this.isLoadingItem = ''
+      }, 1000)
     },
     delCartAll () {
+      this.$refs.Loading.ToggleLoading('on')
       if (this.cartData.carts.length <= 0) {
         alert('請加入商品')
       } else {
@@ -292,6 +319,7 @@ export default {
             this.$refs.ErrorToast.openToasts()
           })
       }
+      this.$refs.Loading.ToggleLoading('off')
     },
     discount () {
       const api = `${process.env.VUE_APP_API}/api/${process.env.VUE_APP_PATH}/coupon`

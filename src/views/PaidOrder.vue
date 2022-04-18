@@ -42,7 +42,7 @@
     <section class="mt-5">
       <div class="container">
         <div class="row">
-          <div class="col col-sm-6">
+          <div class="col-md-6 mb-5">
             <div class="order bg-light">
               <table class="table caption-top">
                 <caption class="fs-5 bg-primary mb-2 px-3 text-white">
@@ -57,7 +57,7 @@
                 </thead>
                 <tbody class="border-0">
                   <tr
-                    class="px-md-5 row align-items-center text-center g-0"
+                    class="px-lg-5 row align-items-center text-center g-0"
                     v-for="item in orderData.products"
                     :key="item.id"
                   >
@@ -76,7 +76,7 @@
                     </td>
                     <td class="col-6 col-md-2 order-md-3">
                       <p class="my-auto">
-                        {{ item.qty }}{{ item.product.unit }}
+                        x{{ item.qty }}{{ item.product.unit }}
                       </p>
                     </td>
                     <td class="col-6 col-md-4 order-md-3">
@@ -87,18 +87,22 @@
               </table>
               <div class="row">
                 <div class="px-sm-5">
-                  <p class="text-end fw-bold">合計:NT${{ orderData.total }}</p>
+                  <p class="text-end fw-bold fs-4">合計: NT${{ Math.round(orderData.total) }}</p>
                 </div>
               </div>
             </div>
           </div>
-          <div class="col col-sm-6">
+          <div class="col-md-6">
             <div class="order bg-light">
               <table class="table caption-top">
                 <caption class="fs-5 bg-primary mb-2 px-3 text-white">
                   顧客資訊
                 </caption>
                 <tbody class="border-0">
+                  <tr>
+                    <th scope="row" class="col-6 col-lg-3 text-center">訂購編號</th>
+                    <td class="col-6 col-lg-9">{{ orderData.id }}</td>
+                  </tr>
                   <tr>
                     <th scope="row" class="col-6 col-lg-3 text-center">
                       訂購日期
@@ -213,7 +217,9 @@ export default {
             this.$refs.Loading.ToggleLoading('off')
             this.getOrder()
             emitter.emit('get-cart')
-            this.$refs.successModal.openModal()
+            setTimeout(() => {
+              this.$refs.successModal.openModal()
+            }, 1000)
             this.$router.push({
               name: 'paid',
               params: { Id: `${this.orderData.id}` }

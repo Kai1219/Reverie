@@ -23,7 +23,7 @@ import { Swiper, SwiperSlide } from 'swiper/vue'
 import 'swiper/css'
 import 'swiper/css/pagination'
 import 'swiper/css/navigation'
-import '@/assets/stylesheets/Swiper.css'
+import '@/assets/stylesheets/swiper.css'
 import { Autoplay, Pagination, Navigation } from 'swiper'
 
 export default {

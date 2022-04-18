@@ -7,9 +7,16 @@
       <div class="sr-only">
         <h1>Reverie</h1>
       </div>
-      <router-link class="navbar-brand me-auto" :to="`/`"
-        ><img src="@/assets/img/r-logo.png" alt="Reverie" class="logo-img"
-      /></router-link>
+      <router-link class="navbar-brand me-auto" :to="`/`">
+        <picture>
+          <source media="(min-width: 401px)" srcset="@/assets/img/r-logo.png" />
+          <source
+            media="(max-width: 400px)"
+            srcset="@/assets/img/logo-sm.png"
+          />
+          <img src="@/assets/img/r-logo.png" alt="Reverie" class="logo-img" />
+        </picture>
+      </router-link>
 
       <div class="nav-item order-lg-2">
         <router-link to="/products" class="nav-link position-relative"
@@ -80,10 +87,6 @@ export default {
   width: 1px;
   height: 1px;
   overflow: hidden;
-}
-
-.logo-img {
-  width: 10rem;
 }
 
 .nav-item .bi {

@@ -17,7 +17,7 @@
       </ol>
     </section>
     <section class="row">
-      <div class="col-12 col-md-6">
+      <div class="col-12 col-lg-6 mb-5">
         <div class="bg-primary text-white">
           <h4 class="m-0 p-2">購物車({{ cartData.carts.length }}件)</h4>
         </div>
@@ -30,11 +30,11 @@
               <hr />
             </div>
             <div
-              class="row p-3 align-items-center"
+              class="row p-1 p-sm-3 align-items-center justify-content-center g-0"
               v-for="item in cartData.carts"
               :key="item.id"
             >
-              <div class="col-3">
+              <div class="col-5 col-sm-3">
                 <div
                   class="pic ratio ratio-1x1"
                   :style="{
@@ -42,15 +42,15 @@
                   }"
                 ></div>
               </div>
-              <div class="col-3">
+              <div class="col-3 col-sm-3">
                 <p class="d-inline-block col my-auto text-center">
                   {{ item.product.title }}
                 </p>
               </div>
-              <div class="col-3">
+              <div class="col-2 col-sm-3">
                 <p class="m-0">{{ item.qty }}{{ item.product.unit }}</p>
               </div>
-              <div class="col-3 order-md-4 order-4">
+              <div class="col-2 col-sm-3 order-md-4 order-4">
                 <p class="m-0">{{ item.total }}元</p>
               </div>
             </div>
@@ -73,7 +73,7 @@
           </div>
         </div>
       </div>
-      <div class="col-12 col-md-6">
+      <div class="col-12 col-lg-6">
         <div class="bg-primary text-white">
           <h4 class="m-0 p-2">訂購資訊</h4>
         </div>
@@ -96,10 +96,7 @@
               rules="email|required"
               v-model="orderform.user.email"
             ></v-field>
-            <ErrorMessage
-              name="email"
-              class="invalid-feedback"
-            ></ErrorMessage>
+            <ErrorMessage name="email" class="invalid-feedback"></ErrorMessage>
           </div>
           <div class="mb-3">
             <label for="name" class="form-label"
@@ -229,30 +226,22 @@ export default {
       this.$refs.Loading.ToggleLoading('off')
     },
     submitorder () {
-      if (this.cartData.carts.length <= 0) {
-        this.toastMessage = '購物車為空，帶您回到購物頁面'
-        this.$refs.ErrorToast.openToasts()
-        setTimeout(() => {
-          this.$router.push('/products')
-        }, 3000)
-      } else {
-        const api = `${process.env.VUE_APP_API}/api/${process.env.VUE_APP_PATH}/order`
-        const data = this.orderform
-        this.$http
-          .post(api, { data })
-          .then((res) => {
-            this.orderId = res.data.orderId
-            this.$router.push({
-              name: 'paid',
-              params: { Id: `${this.orderId}` }
-            })
-            this.$refs.form.resetForm()
+      const api = `${process.env.VUE_APP_API}/api/${process.env.VUE_APP_PATH}/order`
+      const data = this.orderform
+      this.$http
+        .post(api, { data })
+        .then((res) => {
+          this.orderId = res.data.orderId
+          this.$router.push({
+            name: 'paid',
+            params: { Id: `${this.orderId}` }
           })
-          .catch(() => {
-            this.toastMessage = '購物車為空，帶您回到購物頁面'
-            this.$refs.ErrorToast.openToasts()
-          })
-      }
+          this.$refs.form.resetForm()
+        })
+        .catch(() => {
+          this.toastMessage = '購物車為空，帶您回到購物頁面'
+          this.$refs.ErrorToast.openToasts()
+        })
     }
   },
   mounted () {
@@ -262,7 +251,7 @@ export default {
 </script>
 
 <style lang="scss">
-.banner-order{
+.banner-order {
   background-image: url('@/assets/img/banner/banner-order.png');
 }
 

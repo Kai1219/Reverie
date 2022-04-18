@@ -189,7 +189,7 @@
         </div>
       </div>
     </section>
-    <ServiceList/>
+    <ServiceList />
     <keep-alive>
       <RouletteWheel ref="RouletteWheel"></RouletteWheel>
     </keep-alive>
@@ -218,7 +218,7 @@ export default {
       favoriteItems: JSON.parse(localStorage.getItem('favorite')) || [],
       toastMessage: '',
       showArrow: false,
-      rouletteStatus: JSON.parse(localStorage.getItem('rouletteStatus')) || true
+      rouletteStatus: JSON.parse(localStorage.getItem('rouletteStatus'))
     }
   },
   components: {
@@ -255,7 +255,6 @@ export default {
         product_id: id,
         qty
       }
-      this.isLoadingItem = id
       this.$http
         .post(api, { data })
         .then((res) => {
@@ -267,7 +266,6 @@ export default {
           this.toastMessage = '發生錯誤，請重新加入購物車'
           this.$refs.ErrorToast.openToasts()
         })
-      this.isLoadingItem = ''
     },
     toggleFavorite (id) {
       const favIndex = this.favoriteItems.findIndex((item) => item === id)
@@ -292,8 +290,7 @@ export default {
       })
     },
     openRoulette () {
-      this.rouletteStatus = JSON.parse(localStorage.getItem('rouletteStatus'))
-      if (this.rouletteStatus === true) {
+      if (this.rouletteStatus !== false) {
         this.$refs.RouletteWheel.openModal()
       }
     }
@@ -307,7 +304,10 @@ export default {
     },
     rouletteStatus: {
       handler () {
-        localStorage.setItem('rouletteStatus', JSON.stringify(this.rouletteStatus))
+        localStorage.setItem(
+          'rouletteStatus',
+          JSON.stringify(this.rouletteStatus)
+        )
       },
       deep: true
     }
@@ -419,7 +419,8 @@ export default {
   height: 250px;
 }
 
-.imgCard:hover, .imgStretch:hover{
+.imgCard:hover,
+.imgStretch:hover {
   z-index: 3;
 }
 
@@ -464,11 +465,6 @@ export default {
 
 .category .text:hover h3 {
   font-size: 2rem;
-  transition-duration: 1s;
-}
-
-.hover-scale:hover {
-  transform: scale(1.1);
   transition-duration: 1s;
 }
 </style>

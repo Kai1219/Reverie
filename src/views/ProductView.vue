@@ -20,7 +20,7 @@
                 </li>
               </ol>
             </nav>
-            <div class="col col-md-6">
+            <div class="col col-md-6 mb-5">
               <ProductSwiper :swiperProduct="product"></ProductSwiper>
             </div>
             <div class="col col-md-6 px-lg-5 product-content mt-5">
@@ -57,8 +57,20 @@
                     type="button"
                     class="btn btn-primary"
                     @click="addToCart(product.id)"
+                    :disabled="isLoadingItem === product.id"
                   >
-                    加入購物車
+                    <div
+                      class="mx-auto d-flex align-items-center justify-content-center text-white"
+                      v-if="isLoadingItem === product.id"
+                    >
+                      <span
+                        class="spinner-border spinner-border-sm me-2 d-none d-sm-block"
+                        role="status"
+                        aria-hidden="true"
+                      ></span>
+                      <span>加入中...</span>
+                    </div>
+                    <span v-else>加入購物車</span>
                   </button>
                 </div>
                 <button
@@ -174,7 +186,7 @@
         ></ShopSwiper>
       </div>
     </div>
-    <ServiceList/>
+    <ServiceList />
     <SuccessToast ref="SuccessToast" :message="toastMessage"></SuccessToast>
     <ErrorToast ref="ErrorToast" :message="toastMessage"></ErrorToast>
     <Loading ref="Loading"></Loading>
@@ -197,7 +209,8 @@ export default {
       qty: 1,
       favoriteItems: JSON.parse(localStorage.getItem('favorite')) || [],
       toastMessage: '',
-      categoryProducts: []
+      categoryProducts: [],
+      isLoadingItem: ''
     }
   },
   components: {
@@ -241,7 +254,9 @@ export default {
         .catch(() => {
           alert('請再加入購物車一次')
         })
-      this.isLoadingItem = ''
+      setTimeout(() => {
+        this.isLoadingItem = ''
+      }, 1000)
     },
     toggleFavorite (id) {
       const favIndex = this.favoriteItems.findIndex((item) => item === id)

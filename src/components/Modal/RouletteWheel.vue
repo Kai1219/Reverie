@@ -85,7 +85,6 @@ export default {
     getCoupon () {
       localStorage.setItem('rouletteStatus', JSON.stringify(false))
       this.$refs.rouletteBtn.style.animation = 'none'
-      this.rouletteBtnStatus = false
       let angle = 0
       // 隨機抽取1~4數字
       const random = Math.floor(Math.random() * 4) + 1

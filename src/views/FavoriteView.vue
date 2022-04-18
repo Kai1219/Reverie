@@ -11,15 +11,15 @@
       v-if="products.length > 0"
     >
       <table class="table align-middle">
-        <tr class="thead row px-3 justify-content-center">
+        <tr class="thead row px-lg-3 justify-content-center">
           <td class="col-4 text-start">商品資料</td>
-          <td class="col-4">價格</td>
+          <td class="col-4 col-lg-2">價格</td>
           <td class="col-3">加入購物車</td>
           <td class="col-1">刪除</td>
         </tr>
         <hr />
         <tr
-          class="row p-3 align-items-center position-relative justify-content-center"
+          class="row p-3 p-sm-1 align-items-center position-relative justify-content-center"
           v-for="item in products"
           :key="item.id"
         >
@@ -34,7 +34,7 @@
               {{ item.title }}
             </p>
           </td>
-          <td class="col-6 col-md-4 order-md-2 order-3">
+          <td class="col-6 col-md-4 col-lg-2 order-md-2 order-3">
             <div v-if="item.origin_price === item.price">
               <p class="h5 d-inline d-lg-block">NT${{ item.price }}</p>
             </div>
@@ -45,13 +45,25 @@
               >
             </div>
           </td>
-          <td class="col-6 col-md-3 order-md-3 order-4 z-index-3">
+          <td class="col-6 col-md-3 order-md-3 order-4 z-index-3 px-lg-5">
             <button
               type="button"
-              class="btn bg-primary w-50"
+              class="btn bg-primary w-100"
               @click="addToCart(item.id)"
+              :disabled="isLoadingItem === item.id"
             >
-              加入購物車
+              <div
+                class="mx-auto d-flex align-items-center justify-content-center text-white"
+                v-if="isLoadingItem === item.id"
+              >
+                <span
+                  class="spinner-border me-2 d-none d-sm-block"
+                  role="status"
+                  aria-hidden="true"
+                ></span>
+                <span>更新中...</span>
+              </div>
+              <span v-else>加入購物車</span>
             </button>
           </td>
           <td class="col-12 col-md-1 order-md-4 order-4 text-center">
@@ -59,6 +71,7 @@
               type="button"
               class="cancel del-item"
               @click="delfavoriteItem(item.id)"
+              :disabled="isLoadingItem === item.id"
             >
               <i class="bi bi-trash-fill fs-5"></i>
             </button>
@@ -82,7 +95,7 @@
       </div>
     </section>
   </main>
-  <ServiceList/>
+  <ServiceList />
   <SuccessToast ref="SuccessToast" :message="toastMessage"></SuccessToast>
   <ErrorToast ref="ErrorToast" :message="toastMessage"></ErrorToast>
   <Loading ref="Loading"> </Loading>
@@ -100,7 +113,8 @@ export default {
     return {
       favoriteItems: JSON.parse(localStorage.getItem('favorite')) || [],
       products: [],
-      toastMessage: ''
+      toastMessage: '',
+      isLoadingItem: ''
     }
   },
   components: {
@@ -122,12 +136,15 @@ export default {
         .then((res) => {
           this.toastMessage = res.data.message
           this.$refs.SuccessToast.openToasts()
+          emitter.emit('get-cart')
         })
         .catch(() => {
           this.toastMessage = '發生錯誤，請重新加入購物車'
           this.$refs.ErrorToast.openToasts()
         })
-      this.isLoadingItem = ''
+      setTimeout(() => {
+        this.isLoadingItem = ''
+      }, 1500)
     },
     getProduct (id) {
       const api = `${process.env.VUE_APP_API}/api/${process.env.VUE_APP_PATH}/product/${id}`
@@ -149,10 +166,14 @@ export default {
       })
     },
     delfavoriteItem (id) {
+      this.isLoadingItem = id
       const favIndex = this.favoriteItems.findIndex((item) => item === id)
       this.favoriteItems.splice(favIndex, 1)
       this.getFavorites()
       emitter.emit('get-favorites', this.favoriteItems)
+      setTimeout(() => {
+        this.isLoadingItem = ''
+      }, 1500)
     }
   },
   watch: {

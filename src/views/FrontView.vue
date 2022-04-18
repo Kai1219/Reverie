@@ -1,7 +1,7 @@
 <template>
   <div class="wrapper">
     <Front-nav />
-    <RouterView/>
+    <RouterView />
   </div>
   <Footer />
 </template>
@@ -60,5 +60,25 @@ html {
   background-repeat: no-repeat;
   background-position: center center;
   overflow: hidden;
+}
+
+.logo-img {
+  width: 10rem;
+}
+
+@media screen and (max-width: 400px) {
+  .logo-img {
+    width: 3rem;
+  }
+}
+
+.hover-scale:hover,
+.hover-scale:hover img {
+  transform: scale(1.1);
+  transition-duration: 1s;
+}
+
+.hover-line:hover {
+  border: 5px solid #e6c786;
 }
 </style>

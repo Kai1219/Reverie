@@ -4,10 +4,10 @@
       <div class="bg-top banner-products pic"></div>
     </section>
     <section class="container p-md-5">
-      <div class="row gx-5">
-        <div class="col-md-3 products-list">
+      <div class="row">
+        <div class="col-lg-3 products-list pe-lg-5">
           <div
-            class="list-group mb-5 justify-content-between flex-row flex-md-column"
+            class="list-group mb-5 justify-content-between flex-row flex-lg-column"
           >
             <a
               class="list-group-item list-group-item-action"
@@ -48,7 +48,7 @@
             >
           </div>
         </div>
-        <div class="products-items col-md-9">
+        <div class="products-items col-lg-9">
           <div class="products">
             <div class="row row-cols-2 row-cols-md-3">
               <div
@@ -56,51 +56,69 @@
                 v-for="product in products"
                 :key="product.id"
               >
-                <div class="card-product ">
-                  <router-link :to="`/product/${product.id}`">
+                <div class="card-product hover-line">
+                  <router-link
+                    :to="`/product/${product.id}`"
+                    class="text-decoration-none text-dark hover-scale"
+                  >
                     <div
-                      class="pic ratio ratio-1x1 border rounded-pill border-2 hover-scale"
-                      :style="{ backgroundImage: `url(${product.imageUrl})` }"
-                    ></div>
+                      class="pic ratio ratio-1x1 border rounded-pill border-2"
+                    >
+                      <img :src="product.imageUrl" :alt="product.title" />
+                    </div>
+                    <div class="card-body pb-0">
+                      <p class="card-title text-center fs-6">
+                        {{ product.title }}
+                        <span class="badge bg-secondary rounded-pill">{{
+                          product.category
+                        }}</span>
+                      </p>
+                    </div>
+                    <div class="price text-center">
+                      <div v-if="product.origin_price === product.price">
+                        <p class="fs-6 d-inline">NT${{ product.price }}</p>
+                      </div>
+                      <div v-else>
+                        <p class="fs-6 d-inline">
+                          NT${{ product.price }}&nbsp;
+                        </p>
+                        <span class="text-decoration-line-through fw-light"
+                          >NT${{ product.origin_price }}</span
+                        >
+                      </div>
+                    </div>
                   </router-link>
-                  <div class="card-body pb-0">
-                    <p class="card-title text-center fs-6">
-                      {{ product.title }}
-                      <span class="badge bg-secondary rounded-pill">{{
-                        product.category
-                      }}</span>
-                    </p>
-                  </div>
-                  <div class="price text-center">
-                    <div v-if="product.origin_price === product.price">
-                      <p class="fs-6 d-inline">NT${{ product.price }}</p>
-                    </div>
-                    <div v-else>
-                      <p class="fs-6 d-inline">NT${{ product.price }}&nbsp;</p>
-                      <span class="text-decoration-line-through fw-light"
-                        >NT${{ product.origin_price }}</span
+                  <div class="btn-group mt-2 w-100 border border-primary">
+                    <button
+                      type="button"
+                      class="btn text-dark w-50"
+                      @click="toggleFavorite(product.id)"
+                    >
+                      <i
+                        class="bi bi-heart-fill fs-3 text-danger"
+                        v-if="favoriteItems.includes(product.id)"
+                      ></i>
+                      <i class="bi bi-heart fs-3" v-else></i>
+                    </button>
+                    <button
+                      type="button"
+                      class="btn btn-primary w-50"
+                      @click="addToCart(product.id)"
+                      :disabled="isLoadingItem === product.id"
+                    >
+                      <div
+                        class="mx-auto d-flex align-items-center justify-content-center text-white"
+                        v-if="isLoadingItem === product.id"
                       >
-                    </div>
-                    <div class="btn-group mt-2 w-100 border border-primary">
-                      <button
-                        type="button"
-                        class="btn text-dark w-50"
-                        @click="toggleFavorite(product.id)"
-                      >
-                        <i
-                          class="bi bi-heart-fill fs-4 text-danger"
-                          v-if="favoriteItems.includes(product.id)"
-                        ></i>
-                        <i class="bi bi-heart fs-4" v-else></i>
-                      </button>
-                      <button
-                        type="button"
-                        class="btn btn-primary w-50"
-                        @click="addToCart(product.id)"
-                      >
-                        <i class="bi bi-cart3 fs-4"></i>
-                      </button>
-                    </div>
+                        <span
+                          class="spinner-border me-2 d-none d-sm-block"
+                          role="status"
+                          aria-hidden="true"
+                        ></span>
+                        <span>加入中...</span>
+                      </div>
+                      <i class="bi bi-cart3 fs-3" v-else></i>
+                    </button>
                   </div>
                 </div>
               </div>
@@ -113,7 +131,7 @@
         </div>
       </div>
     </section>
-    <ServiceList/>
+    <ServiceList />
     <SuccessToast ref="SuccessToast" :message="toastMessage"></SuccessToast>
     <ErrorToast ref="ErrorToast" :message="toastMessage"></ErrorToast>
     <Loading ref="Loading"> </Loading>
@@ -179,7 +197,9 @@ export default {
           this.toastMessage = '發生錯誤，請重新加入購物車'
           this.$refs.ErrorToast.openToasts()
         })
-      this.isLoadingItem = ''
+      setTimeout(() => {
+        this.isLoadingItem = ''
+      }, 1000)
     },
     getCategory (category) {
       let api = `${process.env.VUE_APP_API}/api/${process.env.VUE_APP_PATH}/products`
