@@ -77,7 +77,7 @@
         <div class="bg-primary text-white">
           <h4 class="m-0 p-2">訂購資訊</h4>
         </div>
-        <Form
+        <v-form
           class="form py-5 p-sm-5 pb-sm-2 justify-content-center"
           v-slot="{ errors }"
           @submit="submitorder"
@@ -86,7 +86,7 @@
             <label for="email" class="form-label"
               >Email<span class="text-danger"> *</span></label
             >
-            <Field
+            <v-field
               type="email"
               class="form-control"
               name="email"
@@ -95,7 +95,7 @@
               :class="{ 'is-invalid': errors['email'] }"
               rules="email|required"
               v-model="orderform.user.email"
-            ></Field>
+            ></v-field>
             <ErrorMessage
               name="email"
               class="invalid-feedback"
@@ -105,7 +105,7 @@
             <label for="name" class="form-label"
               >收件人姓名<span class="text-danger"> *</span></label
             >
-            <Field
+            <v-field
               type="text"
               class="form-control"
               name="姓名"
@@ -114,14 +114,14 @@
               :class="{ 'is-invalid': errors['姓名'] }"
               rules="required"
               v-model="orderform.user.name"
-            ></Field>
+            ></v-field>
             <ErrorMessage name="姓名" class="invalid-feedback"></ErrorMessage>
           </div>
           <div class="mb-3">
             <label for="tel" class="form-label"
               >收件人手機<span class="text-danger"> *</span></label
             >
-            <Field
+            <v-field
               type="tel"
               class="form-control"
               name="手機"
@@ -130,14 +130,14 @@
               :class="{ 'is-invalid': errors['手機'] }"
               :rules="{ regex: /^09[0-9]{8}$/, required: true }"
               v-model="orderform.user.tel"
-            ></Field>
+            ></v-field>
             <ErrorMessage name="手機" class="invalid-feedback"></ErrorMessage>
           </div>
           <div class="mb-3">
             <label for="address" class="form-label"
               >收件人地址<span class="text-danger"> *</span></label
             >
-            <Field
+            <v-field
               type="text"
               class="form-control"
               name="地址"
@@ -146,12 +146,12 @@
               :class="{ 'is-invalid': errors['地址'] }"
               rules="required"
               v-model="orderform.user.address"
-            ></Field>
+            ></v-field>
             <ErrorMessage name="地址" class="invalid-feedback"></ErrorMessage>
           </div>
           <div class="mb-3">
             <label for="message" class="form-label">留言</label>
-            <Field
+            <v-field
               as="textarea"
               id="message"
               name="留言"
@@ -160,12 +160,12 @@
               rows="10"
               v-model="orderform.user.message"
             >
-            </Field>
+            </v-field>
           </div>
           <div class="d-flex justify-content-center mt-5">
             <button type="submit" class="btn btn-primary mb-3">送出訂單</button>
           </div>
-        </Form>
+        </v-form>
       </div>
     </section>
     <ErrorToast ref="ErrorToast" :message="toastMessage"></ErrorToast>
