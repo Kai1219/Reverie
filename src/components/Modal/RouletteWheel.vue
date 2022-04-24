@@ -19,7 +19,7 @@
           ></button>
         </div>
         <div class="modal-body my-3">
-          <div class="roulette">
+          <div class="roulette" v-if="!couponStatus">
             <div class="pointer">
               <span class="triangle"></span>
               <span class="circle"></span>
@@ -32,6 +32,14 @@
               <div class="C"><span>全館9折</span></div>
               <div class="D"><span>全館8折</span></div>
             </div>
+          </div>
+          <div
+            v-else
+            data-aos="zoom-in"
+            data-aos-duration="1000"
+            class="d-flex justify-content-center"
+          >
+            <img src="@/assets/img/gift.png" alt="coupon" />
           </div>
         </div>
         <div class="modal-footer justify-content-center">
@@ -46,7 +54,13 @@
             >
               點我抽獎
             </button>
-            <p class="m-0" v-else data-aos="flip-down" data-aos-duration="1000">
+            <p
+              class="m-0"
+              v-else
+              data-aos="flip-down"
+              data-aos-duration="1000"
+              data-aos-delay="500"
+            >
               恭喜獲得優惠碼:<span class="fw-bold fs-5">{{ coupon }}</span
               ><i
                 class="bi bi-files fs-4 shake"
@@ -112,7 +126,7 @@ export default {
       this.$refs.lottery.style.transform = `rotate(${angle + 1080}deg)`
       setTimeout(() => {
         this.couponStatus = true
-      }, 3000)
+      }, 4000)
     },
     doCopy () {
       this.$copyText(this.coupon, this.$refs.modal)
@@ -153,7 +167,7 @@ export default {
   height: 0px;
   border-top: 0px solid transparent;
   border-right: 10px solid transparent;
-  border-bottom: 40px solid #839ea9;
+  border-bottom: 40px solid #313c3e;
   border-left: 10px solid transparent;
   position: absolute;
   top: calc(0% - 30px);
@@ -164,8 +178,8 @@ export default {
   display: block;
   width: 40px;
   height: 40px;
-  border: 10px solid #839ea9;
-  background-color: #ecf9fd;
+  border: 10px solid #313c3e;
+  background-color: #fff;
   border-radius: 50%;
   position: relative;
 }
@@ -174,28 +188,28 @@ export default {
   width: 100px;
   height: 100px;
   border-radius: 100% 0% 0% 0%;
-  background-color: #f3c2af;
+  background-color: #e8c6a4;
 }
 
 .lottery .B {
   width: 100px;
   height: 100px;
   border-radius: 0% 100% 0% 0%;
-  background-color: #d09075;
+  background-color: #d17028;
 }
 
 .lottery .C {
   width: 100px;
   height: 100px;
   border-radius: 0% 0% 0% 100%;
-  background-color: #cfa68d;
+  background-color: #e7b67b;
 }
 
 .lottery .D {
   width: 100px;
   height: 100px;
   border-radius: 0% 0% 100% 0%;
-  background-color: #ecb28c;
+  background-color: #e3a160;
 }
 
 .lottery span {
@@ -231,12 +245,12 @@ export default {
   border: none;
   color: #fff;
   border-radius: 999rem;
-  background-color: #839ea9;
+  background-color: #313c3e;
   animation: rouletteBtn 2s infinite;
 }
 
 .coupon:hover {
-  background-color: #aac1ca;
+  background-color: #4e5b5d;
   transition: 0.5s;
 }
 
@@ -255,8 +269,8 @@ export default {
 .modal-footer .text span {
   padding: 5px 10px;
   margin: 5px 10px;
-  border: 3px dashed #839ea9;
-  color: #d09075;
+  border: 3px dashed #313c3e;
+  color: #d17028;
 }
 
 .modal-footer .text .bi-files {

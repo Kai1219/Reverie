@@ -18,7 +18,7 @@
       @click="backTop"
       v-if="showArrow === true"
     >
-      <i class="bi bi-arrow-up"></i>
+      <i class="bi bi-chevron-bar-up"></i>
     </div>
     <section
       class="section-brand pt-5 container mb-6"
@@ -83,8 +83,8 @@
           <router-link
             :to="{ path: '/products', query: { category: '冰淇淋' } }"
             type="button"
-            class="w-100 h-100 ice-cream-link pic hover-scale"
-          >
+            class="w-100 h-100 pic hover-scale"
+            ><div class="ice-cream-link category-link w-100 h-100 pic"></div>
             <div
               class="text-center text position-absolute top-0 start-0 d-flex w-100 h-100 justify-content-center align-items-center"
             >
@@ -103,8 +103,8 @@
               <router-link
                 :to="{ path: '/products', query: { category: '冰棒' } }"
                 type="button"
-                class="w-100 h-100 ice-pop-link pic hover-scale"
-              >
+                class="w-100 h-100 pic hover-scale"
+                ><div class="ice-pop-link category-link w-100 h-100 pic"></div>
                 <div
                   class="text-center text position-absolute top-0 start-0 d-flex w-100 h-100 justify-content-center align-items-center"
                 >
@@ -116,8 +116,8 @@
               <router-link
                 :to="{ path: '/products', query: { category: '蛋糕' } }"
                 type="button"
-                class="w-100 h-100 cake-link pic hover-scale"
-              >
+                class="w-100 h-100 pic hover-scale"
+                ><div class="cake-link category-link w-100 h-100 pic"></div>
                 <div
                   class="text-center text position-absolute top-0 start-0 d-flex w-100 h-100 justify-content-center align-items-center"
                 >
@@ -131,8 +131,8 @@
               <router-link
                 :to="{ path: '/products', query: { category: '手工酥塔' } }"
                 type="button"
-                class="w-100 h-100 tart-link pic hover-scale"
-              >
+                class="w-100 h-100 pic hover-scale"
+                ><div class="tart-link category-link w-100 h-100 pic"></div>
                 <div
                   class="text-center text position-absolute top-0 start-0 d-flex w-100 h-100 justify-content-center align-items-center"
                 >
@@ -350,21 +350,20 @@ export default {
   display: flex;
   justify-content: center;
   align-items: center;
-  box-shadow: 2px 2px 8px #bababa;
-  background-color: #aac1ca;
+  box-shadow: 2px 2px 2px #313c3e;
+  background-color: #313c3e;
   bottom: 2rem;
   right: 2rem;
   z-index: 10;
 }
 
-/*section-brand*/
 .deco-line:before {
   content: '';
   display: inline-block;
   width: 5px;
   height: 60px;
-  background-color: #e6c786;
-  border-top: 2px solid #e6c786;
+  background-color: #313c3e;
+  border-top: 2px solid #313c3e;
   position: absolute;
   top: 0px;
   left: -20%;
@@ -387,7 +386,7 @@ export default {
   display: inline-block;
   width: 80px;
   height: 80px;
-  border: 3px dashed #e6c786;
+  border: 3px dashed #e7b67b;
   animation: deco-rotation 30s infinite linear;
   position: absolute;
   top: calc(50% - 40px);
@@ -405,15 +404,14 @@ export default {
 }
 
 .brand .button {
-  color: #839ea9;
+  color: #313c3e;
 }
 
 .brand .button:hover {
-  background-color: #839ea9;
+  background-color: #313c3e;
   color: #fff;
 }
 
-/* category */
 .imgCard,
 .imgStretch {
   height: 250px;
@@ -431,6 +429,12 @@ export default {
   .imgStretch {
     height: 600px;
   }
+}
+
+.imgStretch:hover .category-link,
+.imgCard:hover .category-link {
+  transform: scale(1.1);
+  transition: 1s;
 }
 
 .ice-cream-link {
@@ -460,11 +464,6 @@ export default {
 
 .category .text:hover {
   background-color: #bababa1c;
-  transition-duration: 1s;
-}
-
-.category .text:hover h3 {
-  font-size: 2rem;
   transition-duration: 1s;
 }
 </style>

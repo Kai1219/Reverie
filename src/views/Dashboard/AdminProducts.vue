@@ -1,9 +1,18 @@
 <template>
-  <h2>後台產品列表</h2>
+  <div class="dash-title d-flex flex-column mt-3">
+    <span class="text-secondary position-relative deco-line"
+      >Products List</span
+    >
+    <h2 class="mb-3 fw-bold">產品列表</h2>
+  </div>
   <section>
     <div class="container">
       <div class="text-end mt-4">
-        <button type="button" class="btn btn-primary" @click="openProductModal('create')">
+        <button
+          type="button"
+          class="btn btn-primary"
+          @click="openProductModal('create')"
+        >
           建立新的產品
         </button>
       </div>
@@ -36,14 +45,14 @@
               <div class="btn-group">
                 <button
                   type="button"
-                  class="btn btn-outline-primary btn-sm btn-primary"
+                  class="btn btn-sm btn-primary"
                   @click="openProductModal('edit', product)"
                 >
                   編輯
                 </button>
                 <button
                   type="button"
-                  class="btn btn-outline-danger btn-sm btn-danger"
+                  class="btn btn-sm btn-info"
                   @click="openProductModal('delete', product)"
                 >
                   刪除
@@ -62,16 +71,22 @@
       v-on:get-data="getProducts"
       ref="ProductsModal"
     ></ProductsModal>
-    <DelModal ref="DelModal" @del-item="deleteProduct" :item="tempProducts"></DelModal>
+    <DelModal
+      ref="DelModal"
+      @del-item="deleteProduct"
+      :title="tempProducts.title"
+    ></DelModal>
     <!-- Modal -->
   </section>
   <Pagination :pages="pagination" @emit-pages="getProducts"></Pagination>
+  <Loading ref="Loading"></Loading>
 </template>
 
 <script>
-import Pagination from '@/components/PaginationVuew.vue'
+import Pagination from '@/components/PaginationView.vue'
 import ProductsModal from '@/components/Modal/ProductsModal.vue'
 import DelModal from '@/components/Modal/DelModal.vue'
+import Loading from '@/components/LoadingView.vue'
 export default {
   data () {
     return {
@@ -86,10 +101,12 @@ export default {
   components: {
     Pagination,
     ProductsModal,
-    DelModal
+    DelModal,
+    Loading
   },
   methods: {
     getProducts (page = 1) {
+      this.$refs.Loading.ToggleLoading('on')
       const api = `${process.env.VUE_APP_API}/api/${process.env.VUE_APP_PATH}/admin/products?page=${page}`
       this.$http
         .get(api)
@@ -100,6 +117,7 @@ export default {
         .catch((error) => {
           alert(error.data.message)
         })
+      this.$refs.Loading.ToggleLoading('off')
     },
     openProductModal (status, product) {
       const productsComponent = this.$refs.ProductsModal

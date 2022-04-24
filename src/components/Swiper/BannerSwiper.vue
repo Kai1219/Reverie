@@ -1,5 +1,5 @@
 <template>
-  <swiper
+  <Swiper
     :slidesPerView="1"
     :spaceBetween="30"
     :autoplay="{
@@ -9,13 +9,13 @@
     :loop="true"
     :navigation="false"
     :modules="modules"
-    class="mySwiper banerSwiper"
+    class="banerSwiper"
   >
-    <swiper-slide class="pic banner-swiper1"> </swiper-slide>
-    <swiper-slide class="pic banner-swiper2"></swiper-slide
-    ><swiper-slide class="pic banner-swiper3"></swiper-slide>
-    <swiper-slide class="pic banner-swiper4"></swiper-slide>
-  </swiper>
+    <SwiperSlide class="pic banner-swiper1"></SwiperSlide>
+    <SwiperSlide class="pic banner-swiper2"></SwiperSlide>
+    <SwiperSlide class="pic banner-swiper3"></SwiperSlide>
+    <SwiperSlide class="pic banner-swiper4"></SwiperSlide>
+  </Swiper>
 </template>
 
 <script>

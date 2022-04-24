@@ -1,6 +1,13 @@
 <template>
   <section class="section-top mb-5">
-    <div class="bg-top banner-cart pic"></div>
+    <div class="bg-top banner-cart pic">
+      <div class="text-center w-100 h-100 mask z-index-3 position-relative">
+        <div class="position-absolute top-50 start-50 translate-middle">
+          <h2>購物車</h2>
+          <p>My Cart</p>
+        </div>
+      </div>
+    </div>
   </section>
   <main class="container">
     <section class="cart-progress my-5">
@@ -20,7 +27,7 @@
       <h3 class="m-0 text-center">購物車</h3>
     </div>
     <section
-      class="cart px-2 pb-2 px-sm-5 pt-sm-5 pb-sm-2"
+      class="cart px-2 pb-2 px-sm-5 pt-sm-5 pb-sm-2 bg-white"
       v-if="cartData.carts.length > 0"
     >
       <table class="table align-middle">
@@ -52,7 +59,7 @@
               <p class="h5 d-inline d-lg-block">NT${{ item.product.price }}</p>
             </div>
             <div v-else>
-              <p class="h5 d-inline d-lg-block">
+              <p class="h5 d-inline d-lg-block text-info fw-bold">
                 NT${{ item.product.price }}&nbsp;
               </p>
               <small class="text-decoration-line-through fw-light"
@@ -101,10 +108,10 @@
             <button
               type="button"
               class="cancel"
-              @click="delCartItem(item)"
+              @click="openDelModal(item)"
               :disabled="isLoadingItem === item.id"
             >
-              <i class="bi bi-x-square fs-5 text-danger"></i>
+              <i class="bi bi-x-square fs-5 text-info"></i>
             </button>
           </div>
         </div>
@@ -149,7 +156,11 @@
         </div>
 
         <div class="d-flex justify-content-between align-items-center mt-5">
-          <button type="button" class="btn btn-delete-all" @click="delCartAll">
+          <button
+            type="button"
+            class="btn btn-delete-all"
+            @click="openDelModal(0)"
+          >
             清空購物車
           </button>
           <p class="fw-bold fs-4">
@@ -211,6 +222,11 @@
   </div>
   <SuccessToast ref="SuccessToast" :message="toastMessage"></SuccessToast>
   <ErrorToast ref="ErrorToast" :message="toastMessage"></ErrorToast>
+  <DelModal
+    ref="DelModal"
+    @del-item="delCartItem"
+    :title="delteTitle"
+  ></DelModal>
   <Loading ref="Loading"> </Loading>
 </template>
 
@@ -219,6 +235,7 @@ import emitter from '@/libs/emitter'
 import Loading from '@/components/LoadingView.vue'
 import SuccessToast from '@/components/SuccessToast.vue'
 import ErrorToast from '@/components/ErrorToast.vue'
+import DelModal from '@/components/Modal/DelModal.vue'
 export default {
   name: 'CartView',
   data () {
@@ -233,10 +250,12 @@ export default {
         code: ''
       },
       isLoadingItem: '',
-      toastMessage: ''
+      toastMessage: '',
+      delteCartId: {},
+      delteTitle: ''
     }
   },
-  components: { Loading, SuccessToast, ErrorToast },
+  components: { Loading, SuccessToast, ErrorToast, DelModal },
   methods: {
     goToSendOrder () {
       if (this.cartData.carts.length <= 0) {
@@ -285,9 +304,24 @@ export default {
         this.isLoadingItem = ''
       }, 1000)
     },
-    delCartItem (item) {
-      const api = `${process.env.VUE_APP_API}/api/${process.env.VUE_APP_PATH}/cart/${item.id}`
-      this.isLoadingItem = item.id
+    openDelModal (item) {
+      if (item !== 0) {
+        this.delteCartId = item.id
+        this.delteTitle = item.product.title
+      } else {
+        this.delteCartId = item.id
+        this.delteTitle = '整個購物車'
+      }
+      const DelModal = this.$refs.DelModal
+      DelModal.openModal()
+    },
+    delCartItem () {
+      let api = `${process.env.VUE_APP_API}/api/${process.env.VUE_APP_PATH}/cart/${this.delteCartId}`
+      this.isLoadingItem = this.delteCartId
+      if (!this.delteCartId) {
+        api = `${process.env.VUE_APP_API}/api/${process.env.VUE_APP_PATH}/carts`
+        this.$refs.Loading.ToggleLoading('on')
+      }
       this.$http
         .delete(api)
         .then(() => {
@@ -298,27 +332,10 @@ export default {
           this.toastMessage = error.data.message
           this.$refs.ErrorToast.openToasts()
         })
+      this.$refs.DelModal.hideModal()
       setTimeout(() => {
         this.isLoadingItem = ''
       }, 1000)
-    },
-    delCartAll () {
-      this.$refs.Loading.ToggleLoading('on')
-      if (this.cartData.carts.length <= 0) {
-        alert('請加入商品')
-      } else {
-        const api = `${process.env.VUE_APP_API}/api/${process.env.VUE_APP_PATH}/carts`
-        this.$http
-          .delete(api)
-          .then(() => {
-            this.getCart()
-            emitter.emit('get-cart')
-          })
-          .catch((error) => {
-            this.toastMessage = error.data.message
-            this.$refs.ErrorToast.openToasts()
-          })
-      }
       this.$refs.Loading.ToggleLoading('off')
     },
     discount () {
@@ -350,7 +367,7 @@ export default {
 .banner-cart {
   background-image: url('@/assets/img/banner/banner-cart.png');
 }
-/*cart-progress*/
+
 .progress-list li {
   display: flex;
   flex-direction: column;
@@ -364,7 +381,7 @@ export default {
   width: 30px;
   height: 30px;
   border-radius: 15px;
-  background-color: #839ea9;
+  background-color: #d17028;
   top: calc(0% - 4px);
   left: calc(50% - 15px);
   z-index: -1;
@@ -378,7 +395,7 @@ export default {
   top: calc(25% - 2.5px);
   left: -50%;
   margin: auto;
-  background-color: #839ea9;
+  background-color: #d17028;
   z-index: -5;
 }
 
@@ -386,17 +403,12 @@ export default {
 .progress-list li.active ~ li:before {
   background-color: #d5d5d5;
 }
-/*table*/
+
 @media screen and (max-width: 768px) {
   .thead,
   thead {
     display: none;
   }
-}
-
-.cart {
-  background-color: #fff;
-  box-shadow: 0 0 1rem #eaeaea;
 }
 
 .cart .bi-cart3 {
@@ -416,7 +428,13 @@ export default {
 .btn-delete-all {
   background-color: #fff;
   border: 1px solid #eaeaea;
-  color: #839ea9;
+  color: #313c3e;
+}
+
+.btn-delete-all:hover {
+  background-color: #eaeaea;
+  border: 1px solid #eaeaea;
+  color: #313c3e;
 }
 
 .cart .del-item {
@@ -435,7 +453,6 @@ export default {
   width: 100px;
 }
 
-/*section-service*/
 .services {
   border-top: 1px solid #bababa;
   border-bottom: 1px solid #bababa;

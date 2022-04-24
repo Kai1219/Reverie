@@ -3,7 +3,7 @@
     <loading
       :active="isLoading"
       :is-full-page="fullPage"
-      color="#839EA9"
+      color="#313C3E"
       loader="dots"
     >
     </loading>

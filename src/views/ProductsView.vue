@@ -1,7 +1,14 @@
 <template>
   <main>
     <section class="section-top mb-5">
-      <div class="bg-top banner-products pic"></div>
+      <div class="bg-top banner-products pic">
+        <div class="text-center w-100 h-100 mask z-index-3 position-relative">
+          <div class="position-absolute top-50 start-50 translate-middle">
+            <h2>商店</h2>
+            <p>Our Products</p>
+          </div>
+        </div>
+      </div>
     </section>
     <section class="container p-md-5">
       <div class="row">
@@ -56,14 +63,12 @@
                 v-for="product in products"
                 :key="product.id"
               >
-                <div class="card-product hover-line">
+                <div class="card-product border">
                   <router-link
                     :to="`/product/${product.id}`"
                     class="text-decoration-none text-dark hover-scale"
                   >
-                    <div
-                      class="pic ratio ratio-1x1 border rounded-pill border-2"
-                    >
+                    <div class="pic ratio ratio-1x1">
                       <img :src="product.imageUrl" :alt="product.title" />
                     </div>
                     <div class="card-body pb-0">
@@ -79,7 +84,7 @@
                         <p class="fs-6 d-inline">NT${{ product.price }}</p>
                       </div>
                       <div v-else>
-                        <p class="fs-6 d-inline">
+                        <p class="fs-6 d-inline text-info fw-bold">
                           NT${{ product.price }}&nbsp;
                         </p>
                         <span class="text-decoration-line-through fw-light"
@@ -91,11 +96,11 @@
                   <div class="btn-group mt-2 w-100 border border-primary">
                     <button
                       type="button"
-                      class="btn text-dark w-50"
+                      class="btn text-dark w-25"
                       @click="toggleFavorite(product.id)"
                     >
                       <i
-                        class="bi bi-heart-fill fs-3 text-danger"
+                        class="bi bi-heart-fill fs-3 text-info"
                         v-if="favoriteItems.includes(product.id)"
                       ></i>
                       <i class="bi bi-heart fs-3" v-else></i>
@@ -111,7 +116,7 @@
                         v-if="isLoadingItem === product.id"
                       >
                         <span
-                          class="spinner-border me-2 d-none d-sm-block"
+                          class="spinner-border me-2 d-none d-lg-block"
                           role="status"
                           aria-hidden="true"
                         ></span>
@@ -139,7 +144,7 @@
 </template>
 
 <script>
-import Pagination from '@/components/PaginationVuew.vue'
+import Pagination from '@/components/PaginationView.vue'
 import emitter from '@/libs/emitter'
 import Loading from '@/components/LoadingView.vue'
 import SuccessToast from '@/components/SuccessToast.vue'

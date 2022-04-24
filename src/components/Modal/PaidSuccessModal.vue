@@ -9,7 +9,9 @@
     <div class="modal-dialog modal-dialog-centered">
       <div class="modal-content">
         <div class="modal-header bg-primary text-white">
-          <h5 class="modal-title" id="exampleModalLabel" v-if="!loading">付款完成!</h5>
+          <h5 class="modal-title" id="exampleModalLabel" v-if="!loading">
+            付款完成!
+          </h5>
           <button
             type="button"
             class="btn-close"
@@ -22,7 +24,7 @@
             class="mx-auto d-flex align-items-center justify-content-center text-white"
           >
             <span
-              class="spinner-border text-primary spinner-size me-2 "
+              class="spinner-border text-primary spinner-size me-2"
               role="status"
               aria-hidden="true"
             ></span>

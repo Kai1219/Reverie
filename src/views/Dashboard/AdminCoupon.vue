@@ -1,9 +1,16 @@
 <template>
-  <h2>優惠碼</h2>
+  <div class="dash-title d-flex flex-column mt-3">
+    <span class="text-secondary position-relative deco-line">Coupon List</span>
+    <h2 class="mb-3 fw-bold">優惠碼</h2>
+  </div>
   <section>
     <div class="container">
       <div class="text-end mt-4">
-        <button type="button" class="btn btn-primary" @click="openCouponModal('create')">
+        <button
+          type="button"
+          class="btn btn-primary"
+          @click="openCouponModal('create')"
+        >
           建立新的優惠碼
         </button>
       </div>
@@ -27,21 +34,23 @@
               {{ $filters.date(coupon.due_date) }}
             </td>
             <td>
-              <span v-if="coupon.is_enabled" class="text-success">啟用</span>
+              <span v-if="coupon.is_enabled" class="text-success fw-bold"
+                >啟用</span
+              >
               <span v-else>未啟用</span>
             </td>
             <td>
               <div class="btn-group">
                 <button
                   type="button"
-                  class="btn btn-outline-primary btn-sm btn-primary"
+                  class="btn btn-sm btn-primary"
                   @click="openCouponModal('edit', coupon)"
                 >
                   編輯
                 </button>
                 <button
                   type="button"
-                  class="btn btn-outline-danger btn-sm btn-danger"
+                  class="btn btn-sm btn-info"
                   @click="openCouponModal('delete', coupon)"
                 >
                   刪除
@@ -62,15 +71,17 @@
   <DelModal
     ref="DelModal"
     @del-item="deleteCoupon"
-    :item="tempCoupons"
+    :title="tempCoupons.title"
   ></DelModal>
   <Pagination :pages="pagination"></Pagination>
+  <Loading ref="Loading"></Loading>
 </template>
 
 <script>
-import Pagination from '@/components/PaginationVuew.vue'
+import Pagination from '@/components/PaginationView.vue'
 import CouponModal from '@/components/Modal/CouponModal.vue'
 import DelModal from '@/components/Modal/DelModal.vue'
+import Loading from '@/components/LoadingView.vue'
 export default {
   data () {
     return {
@@ -88,10 +99,12 @@ export default {
   components: {
     Pagination,
     CouponModal,
-    DelModal
+    DelModal,
+    Loading
   },
   methods: {
     getCoupons (page = 1) {
+      this.$refs.Loading.ToggleLoading('on')
       const api = `${process.env.VUE_APP_API}/api/${process.env.VUE_APP_PATH}/admin/coupons?page=${page}`
       this.$http
         .get(api)
@@ -102,6 +115,7 @@ export default {
         .catch((error) => {
           alert(error.data.message)
         })
+      this.$refs.Loading.ToggleLoading('off')
     },
     openCouponModal (status, coupon) {
       const CouponComponent = this.$refs.CouponsModal
@@ -111,7 +125,9 @@ export default {
         this.tempCoupons = {}
         CouponComponent.openModal()
         this.tempCoupons = {
-          due_date: new Date().getTime() / 1000
+          due_date: new Date().getTime() / 1000,
+          is_enabled: 0,
+          percent: 100
         }
         this.status = 'create'
       } else if (status === 'edit') {

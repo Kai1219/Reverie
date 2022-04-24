@@ -1,5 +1,5 @@
 <template>
-  <RouterView/>
+  <RouterView />
 </template>
 
 <script>
@@ -20,9 +20,23 @@ export default {
 body {
   font-family: 'Roboto', sans-serif;
   background-color: #fbfbfb;
-  color: #212529;
 }
-.btn {
-  color: #ecf9fd;
+
+.btn-danger,
+.btn-danger:hover,
+.btn-success,
+.btn-success:hover,
+.btn-info,
+.btn-info:hover,
+.btn-success:hover,
+.btn-warning,
+.btn-warning:hover,
+.btn-outline-danger:hover {
+  color: #fff;
+}
+
+.navbar .active,
+.progress-list .active {
+  color: #d17028;
 }
 </style>

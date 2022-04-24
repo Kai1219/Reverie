@@ -7,10 +7,9 @@
     aria-hidden="true"
     ref="modal"
   >
-    <div class="modal-dialog">
+    <div class="modal-dialog modal-dialog-centered">
       <div class="modal-content">
-        <div class="modal-header bg-danger text-white">
-          <h5 class="modal-title" id="delModalLabel">確定是否刪除!</h5>
+        <div class="modal-header text-white border-0">
           <button
             type="button"
             class="btn-close"
@@ -18,16 +17,17 @@
             aria-label="Close"
           ></button>
         </div>
-        <div class="modal-body">
+        <div class="modal-body text-center">
           <p>
-            是否刪除<strong class="text-danger">{{ item.title }}</strong
-            >?(刪除後將無法復原!!)
+            是否刪除<strong class="text-danger">{{ title }}</strong
+            >?
           </p>
+          <p class="text-secondary text-sm">(刪除後將無法復原!!)</p>
         </div>
         <div class="modal-footer">
           <button
             type="button"
-            class="btn btn-secondary"
+            class="btn btn-outline-secondary"
             data-bs-dismiss="modal"
           >
             取消
@@ -44,10 +44,7 @@
 <script>
 import modalMixin from '@/mixins/modalMixin'
 export default {
-  props: ['item'],
-  data () {
-    return {}
-  },
+  props: ['title'],
   mixins: [modalMixin],
   methods: {
     delItem () {

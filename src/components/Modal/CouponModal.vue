@@ -7,7 +7,7 @@
     aria-hidden="true"
     ref="modal"
   >
-    <div class="modal-dialog modal-xl">
+    <div class="modal-dialog modal-xl modal-dialog-centered">
       <div class="modal-content">
         <div class="modal-header">
           <h5 class="modal-title" id="CouponsModalLabel">
@@ -91,7 +91,7 @@
         <div class="modal-footer">
           <button
             type="button"
-            class="btn btn-secondary"
+            class="btn btn-outline-secondary"
             data-bs-dismiss="modal"
           >
             取消
@@ -132,7 +132,6 @@ export default {
         .then((res) => {
           alert(res.data.message)
           this.$emit('get-data')
-          console.log(this.temporaryCoupons)
           this.modal.hide()
         })
         .catch((error) => {
@@ -152,9 +151,6 @@ export default {
     due_date () {
       this.tempCoupon.due_date = Math.floor(new Date(this.due_date) / 1000)
     }
-  },
-  mounted () {
-    console.log(this.$refs.checkbox)
   }
 }
 </script>

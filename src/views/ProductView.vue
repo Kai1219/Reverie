@@ -1,7 +1,14 @@
 <template>
   <main>
     <section class="section-top mb-5">
-      <div class="bg-top banner-product pic"></div>
+      <div class="bg-top banner-product pic">
+        <div class="text-center w-100 h-100 mask z-index-3 position-relative">
+          <div class="position-absolute top-50 start-50 translate-middle">
+            <h2>產品細節</h2>
+            <p>Product Details</p>
+          </div>
+        </div>
+      </div>
     </section>
     <section class="container mb-6">
       <div class="row my-5">
@@ -15,7 +22,7 @@
                 <li class="breadcrumb-item">
                   <router-link to="/products">商品一覽</router-link>
                 </li>
-                <li class="breadcrumb-item active" aria-current="page">
+                <li class="breadcrumb-item active fw-bold" aria-current="page">
                   {{ product.category }}
                 </li>
               </ol>
@@ -79,7 +86,7 @@
                   @click="toggleFavorite(product.id)"
                 >
                   <i
-                    class="bi bi-heart-fill text-danger"
+                    class="bi bi-heart-fill text-info"
                     v-if="favoriteItems.includes(product.id)"
                   ></i>
                   <i class="bi bi-heart" v-else></i>
@@ -205,7 +212,9 @@ export default {
   name: 'ProductView',
   data () {
     return {
-      product: {},
+      product: {
+        imageUrl: ''
+      },
       qty: 1,
       favoriteItems: JSON.parse(localStorage.getItem('favorite')) || [],
       toastMessage: '',
@@ -296,7 +305,9 @@ export default {
       deep: true
     },
     $route (to) {
-      this.getProduct()
+      if (to.name === 'product') {
+        this.getProduct()
+      }
     }
   },
   mounted () {

@@ -1,7 +1,10 @@
 <template>
-  <h2>訂單列表</h2>
-  <section>
-    <div class="container">
+  <div class="dash-title d-flex flex-column mb-3 mt-3">
+    <span class="text-secondary position-relative deco-line">Order List</span>
+    <h2 class="mb-3 fw-bold">訂單列表</h2>
+  </div>
+  <section class="container">
+    <div class="container table-responsive ">
       <table class="table table-hover align-middle">
         <thead class="table-secondary">
           <tr>
@@ -21,7 +24,7 @@
               <td scope="row">{{ order.id }}</td>
               <td>{{ $filters.date(order.create_at) }}</td>
               <td>{{ order.user.name }}</td>
-              <td>{{ order.final_total }}</td>
+              <td>{{ Math.round(order.total) }}</td>
               <td>
                 <div class="form-check form-switch">
                   <input
@@ -31,11 +34,11 @@
                     id="`paidSwitch${order.id}`"
                     v-model="order.is_paid"
                     @change="updatePaid(order)"
-                    :disabled = "order.is_paid"
+                    :disabled="order.is_paid"
                   />
                   <label class="form-check-label" for="`paidSwitch${order.id}`">
                     <span v-if="order.is_paid">已付款</span>
-                    <span v-else>未付款</span>
+                    <span v-else class="text-danger fw-bold">未付款</span>
                   </label>
                 </div>
               </td>
@@ -52,7 +55,7 @@
               <td>
                 <button
                   type="button"
-                  class="btn btn-danger"
+                  class="btn btn-info"
                   @click="openDelOrderModal(order)"
                 >
                   刪除
@@ -63,42 +66,44 @@
         </tbody>
       </table>
     </div>
+      <Pagination :pages="pagination" @emit-pages="getOrders"></Pagination>
   </section>
-
   <OrderModal
-    :order="tempOrder"
+    :temporary-order="tempOrder"
+    :edit-status="editStatus"
     ref="orderModal"
     @update-paid="updatePaid"
+    @change-edit="changeEdit"
   ></OrderModal>
-   <DelModal
-    ref="DelModal"
-    @del-item="delOrder"
-    :item="tempOrder"
-  ></DelModal>
-  <Pagination :pages="pagination" @emit-pages="getOrders"></Pagination>
+  <DelModal ref="DelModal" @del-item="delOrder" :title="delteTitle"></DelModal>
+  <Loading ref="Loading"></Loading>
 </template>
 
 <script>
 import OrderModal from '@/components/Modal/OrderModal.vue'
 import DelModal from '@/components/Modal/DelModal.vue'
-import Pagination from '@/components/PaginationVuew.vue'
+import Pagination from '@/components/PaginationView.vue'
+import Loading from '@/components/LoadingView.vue'
 export default {
   data () {
     return {
       orders: {},
-      isNew: false,
       pagination: {},
       tempOrder: {},
-      currentPage: 1
+      currentPage: 1,
+      editStatus: false,
+      delteTitle: ''
     }
   },
   components: {
     Pagination,
     DelModal,
-    OrderModal
+    OrderModal,
+    Loading
   },
   methods: {
     getOrders (currentPage = 1) {
+      this.$refs.Loading.ToggleLoading('on')
       this.currentPage = currentPage
       this.isLoading = true
       this.$http
@@ -114,22 +119,24 @@ export default {
           this.isLoading = false
           alert(error.data.message)
         })
+      this.$refs.Loading.ToggleLoading('off')
     },
     openModal (order) {
-      this.tempOrder = { ...order }
-      this.isNew = false
+      this.tempOrder = JSON.parse(JSON.stringify(order))
+      this.editStatus = false
       const orderComponent = this.$refs.orderModal
       orderComponent.openModal()
     },
     openDelOrderModal (order) {
       this.tempOrder = { ...order }
+      this.delteTitle = this.tempOrder.id + '此筆訂單'
       const DelModal = this.$refs.DelModal
       DelModal.openModal()
     },
     updatePaid (order) {
-      this.isLoading = true
       const paid = {
-        is_paid: order.is_paid
+        is_paid: order.is_paid,
+        user: order.user
       }
       this.$http
         .put(
@@ -137,14 +144,17 @@ export default {
           { data: paid }
         )
         .then((res) => {
-          this.isLoading = false
-          const orderComponent = this.$refs.orderModal
-          orderComponent.hideModal()
           this.getOrders(this.currentPage)
-          alert(res.data.message)
+          if (!this.editStatus) {
+            alert(res.data.message)
+            const orderComponent = this.$refs.orderModal
+            orderComponent.hideModal()
+          } else {
+            alert('已更新收件人資訊')
+            this.editStatus = false
+          }
         })
         .catch((error) => {
-          this.isLoading = false
           alert(error.data.message)
         })
     },
@@ -154,7 +164,7 @@ export default {
         .delete(
           `${process.env.VUE_APP_API}/api/${process.env.VUE_APP_PATH}/admin/order/${this.tempOrder.id}`
         )
-        .then((res) => {
+        .then(() => {
           this.getOrders(this.currentPage)
           alert('訂單刪除成功!')
         })
@@ -163,9 +173,12 @@ export default {
         })
       this.$refs.DelModal.hideModal()
       this.isLoading = false
+    },
+    changeEdit () {
+      this.editStatus = true
     }
   },
-  created () {
+  mounted () {
     this.getOrders()
   }
 }

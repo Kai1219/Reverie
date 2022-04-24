@@ -1,6 +1,13 @@
 <template>
   <section class="section-top mb-5">
-    <div class="bg-top banner-order pic"></div>
+    <div class="bg-top banner-order pic">
+      <div class="text-center w-100 h-100 mask z-index-3 position-relative">
+        <div class="position-absolute top-50 start-50 translate-middle">
+          <h2>結帳流程</h2>
+          <p>Checkout</p>
+        </div>
+      </div>
+    </div>
   </section>
   <main class="container mb-5">
     <section class="cart-progress my-5">
@@ -51,7 +58,13 @@
                 <p class="m-0">{{ item.qty }}{{ item.product.unit }}</p>
               </div>
               <div class="col-2 col-sm-3 order-md-4 order-4">
-                <p class="m-0">{{ item.total }}元</p>
+                <p
+                  class="m-0"
+                  v-if="item.product.origin_price === item.product.price"
+                >
+                  {{ item.total }}元
+                </p>
+                <p class="m-0 text-info" v-else>{{ item.total }}元</p>
               </div>
             </div>
           </table>
@@ -78,6 +91,7 @@
           <h4 class="m-0 p-2">訂購資訊</h4>
         </div>
         <v-form
+          ref="form"
           class="form py-5 p-sm-5 pb-sm-2 justify-content-center"
           v-slot="{ errors }"
           @submit="submitorder"
@@ -166,7 +180,7 @@
       </div>
     </section>
     <ErrorToast ref="ErrorToast" :message="toastMessage"></ErrorToast>
-    <Loading ref="Loading"> </Loading>
+    <Loading ref="Loading"></Loading>
   </main>
 </template>
 
@@ -234,7 +248,7 @@ export default {
           this.orderId = res.data.orderId
           this.$router.push({
             name: 'paid',
-            params: { Id: `${this.orderId}` }
+            params: { id: `${this.orderId}` }
           })
           this.$refs.form.resetForm()
         })
@@ -268,7 +282,7 @@ export default {
   width: 30px;
   height: 30px;
   border-radius: 15px;
-  background-color: #839ea9;
+  background-color: #d17028;
   top: calc(0% - 4px);
   left: calc(50% - 15px);
   z-index: -1;
@@ -282,7 +296,7 @@ export default {
   top: calc(25% - 2.5px);
   left: -50%;
   margin: auto;
-  background-color: #839ea9;
+  background-color: #d17028;
   z-index: -5;
 }
 

@@ -67,14 +67,14 @@ $colors: (
 // scss-docs-end colors-map
 
 // scss-docs-start theme-color-variables
-$primary:       #839EA9;//$blue !default;
-$secondary:     #BABABA;//$gray-600 !default;
-$success:       #478058;//$green !default;
-$info:          $cyan !default;
-$warning:       #e6c786;//$yellow !default;
+$primary:       #313C3E;//$blue !default;
+$secondary:     $gray-600 !default;
+$success:       #809181;//$green !default;
+$info:          #D17028;//$cyan !default;
+$warning:       #E7B67B;//$yellow !default;
 $danger:        #CC5F5A;//$red !default;
 $light:         $gray-100 !default;
-$dark:          $gray-900 !default;
+$dark:          #313C3E;//$gray-900 !default;
 // scss-docs-end theme-color-variables
 
 // scss-docs-start theme-colors-map

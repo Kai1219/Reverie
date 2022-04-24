@@ -1,5 +1,5 @@
 <template>
-  <swiper
+  <Swiper
     :style="{
       '--swiper-navigation-color': '#fff',
       '--swiper-pagination-color': '#fff'
@@ -8,38 +8,38 @@
     :navigation="true"
     :thumbs="{ swiper: thumbsSwiper }"
     :modules="modules"
-    :loop="true"
-    class="mySwiper2"
+    @swiper="onSwiper"
+    class="mySwiper2 product-swiper"
   >
-    <swiper-slide
+    <SwiperSlide
       :style="{ backgroundImage: `url(${swiperProduct.imageUrl})` }"
-    ></swiper-slide>
-    <swiper-slide
+    ></SwiperSlide>
+    <SwiperSlide
       v-for="(img, i) in swiperProduct.imagesUrl"
       :key="i"
       :style="{ backgroundImage: `url(${img})` }"
     >
-    </swiper-slide>
-  </swiper>
-  <swiper
+    </SwiperSlide>
+  </Swiper>
+  <Swiper
     @swiper="setThumbsSwiper"
     :spaceBetween="10"
     :slidesPerView="4"
     :freeMode="true"
     :watchSlidesProgress="true"
     :modules="modules"
-    class="mySwiper productSwiper"
+    class="mySwiper product-swiper product-mask"
   >
-    <swiper-slide
+    <SwiperSlide
       :style="{ backgroundImage: `url(${swiperProduct.imageUrl})` }"
-    ></swiper-slide>
-    <swiper-slide
+    ></SwiperSlide>
+    <SwiperSlide
       v-for="(img, i) in swiperProduct.imagesUrl"
       :key="i"
       :style="{ backgroundImage: `url(${img})` }"
     >
-    </swiper-slide>
-  </swiper>
+    </SwiperSlide>
+  </Swiper>
 </template>
 
 <script>
@@ -71,13 +71,22 @@ export default {
   methods: {
     setThumbsSwiper (swiper) {
       this.thumbsSwiper = swiper
+    },
+    onSwiper (swiper) {
+      this.swiper = swiper
+    },
+    handleSlideTo () {
+      this.swiper.slideTo(0)
     }
+  },
+  updated () {
+    this.handleSlideTo()
   }
 }
 </script>
 
 <style lang="scss">
-.swiper {
+.product-swiper {
   width: 100%;
   height: 25rem;
   margin-left: auto;
@@ -102,13 +111,13 @@ export default {
   padding: 10px 0;
 }
 
-.productSwiper .swiper-slide {
+.product-mask .swiper-slide {
   width: 25%;
   height: 100%;
   opacity: 0.4;
 }
 
-.productSwiper .swiper-slide-thumb-active {
+.product-mask .swiper-slide-thumb-active {
   opacity: 1;
 }
 </style>

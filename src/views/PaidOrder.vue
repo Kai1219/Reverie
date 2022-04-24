@@ -1,6 +1,13 @@
 <template>
   <section class="section-top mb-5">
-    <div class="bg-top banner-order pic"></div>
+    <div class="bg-top banner-order pic">
+      <div class="text-center w-100 h-100 mask z-index-3 position-relative">
+        <div class="position-absolute top-50 start-50 translate-middle">
+          <h2>結帳流程</h2>
+          <p>Checkout</p>
+        </div>
+      </div>
+    </div>
   </section>
   <main class="container mb-5">
     <section class="cart-progress my-5">
@@ -17,7 +24,7 @@
       </ol>
     </section>
     <section>
-      <div class="thank-text p-5 d-flex flex-column align-items-center">
+      <div class="thank-text p-5 m-1 d-flex flex-column align-items-center">
         <h2 v-if="orderData.is_paid" class="text-success">付款完成!</h2>
         <h2 v-else>訂購完成!!</h2>
         <p>
@@ -33,7 +40,7 @@
           ></span
         >
         <span v-else
-          ><button type="button" class="btn btn-primary" @click="goPaid()">
+          ><button type="button" class="btn btn-info" @click="goPaid()">
             確定付款
           </button></span
         >
@@ -43,7 +50,7 @@
       <div class="container">
         <div class="row">
           <div class="col-md-6 mb-5">
-            <div class="order bg-light">
+            <div class="order bg-light bg-opacity-10">
               <table class="table caption-top">
                 <caption class="fs-5 bg-primary mb-2 px-3 text-white">
                   訂購商品
@@ -87,20 +94,24 @@
               </table>
               <div class="row">
                 <div class="px-sm-5">
-                  <p class="text-end fw-bold fs-4">合計: NT${{ Math.round(orderData.total) }}</p>
+                  <p class="text-end fw-bold fs-4">
+                    合計: NT${{ Math.round(orderData.total) }}
+                  </p>
                 </div>
               </div>
             </div>
           </div>
           <div class="col-md-6">
-            <div class="order bg-light">
+            <div class="order bg-light bg-opacity-10">
               <table class="table caption-top">
                 <caption class="fs-5 bg-primary mb-2 px-3 text-white">
                   顧客資訊
                 </caption>
                 <tbody class="border-0">
                   <tr>
-                    <th scope="row" class="col-6 col-lg-3 text-center">訂購編號</th>
+                    <th scope="row" class="col-6 col-lg-3 text-center">
+                      訂購編號
+                    </th>
                     <td class="col-6 col-lg-9">{{ orderData.id }}</td>
                   </tr>
                   <tr>
@@ -187,9 +198,9 @@ export default {
   methods: {
     getOrder () {
       this.$refs.Loading.ToggleLoading('on')
-      const { Id } = this.$route.params
-      if (Id) {
-        const api = `${process.env.VUE_APP_API}/api/${process.env.VUE_APP_PATH}/order/${Id}`
+      const { id } = this.$route.params
+      if (id) {
+        const api = `${process.env.VUE_APP_API}/api/${process.env.VUE_APP_PATH}/order/${id}`
         this.$http(api)
           .then((res) => {
             this.orderData = res.data.order
@@ -199,7 +210,7 @@ export default {
             this.$refs.ErrorToast.openToasts()
           })
       } else {
-        this.toastMessage = '購物車為空，帶您回到購物頁面'
+        this.toastMessage = '訂單不存在，帶您回到購物頁面'
         this.$refs.ErrorToast.openToasts()
         setTimeout(() => {
           this.$router.push('/products')
@@ -217,12 +228,10 @@ export default {
             this.$refs.Loading.ToggleLoading('off')
             this.getOrder()
             emitter.emit('get-cart')
-            setTimeout(() => {
-              this.$refs.successModal.openModal()
-            }, 1000)
+            this.$refs.successModal.openModal()
             this.$router.push({
               name: 'paid',
-              params: { Id: `${this.orderData.id}` }
+              params: { id: `${this.orderData.id}` }
             })
           })
           .catch(() => {
@@ -258,7 +267,7 @@ export default {
   width: 30px;
   height: 30px;
   border-radius: 15px;
-  background-color: #839ea9;
+  background-color: #d17028;
   top: calc(0% - 4px);
   left: calc(50% - 15px);
   z-index: -1;
@@ -272,7 +281,7 @@ export default {
   top: calc(25% - 2.5px);
   left: -50%;
   margin: auto;
-  background-color: #839ea9;
+  background-color: #d17028;
   z-index: -5;
 }
 
@@ -298,11 +307,10 @@ th {
 }
 
 .order {
-  border: 1px solid #839ea9;
+  border: 1px solid #313c3e;
 }
 
 .thank-text {
-  background-color: #aac1ca55;
-  box-shadow: 0 0 1rem #bababa;
+  border: 1px solid #313c3e;
 }
 </style>

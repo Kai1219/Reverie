@@ -14,6 +14,9 @@ export default {
   components: {
     FrontNav,
     Footer
+  },
+  unmounted () {
+    localStorage.setItem('rouletteStatus', JSON.stringify(true))
   }
 }
 </script>
@@ -72,13 +75,14 @@ html {
   }
 }
 
-.hover-scale:hover,
 .hover-scale:hover img {
   transform: scale(1.1);
   transition-duration: 1s;
 }
 
-.hover-line:hover {
-  border: 5px solid #e6c786;
+.card-product .pic img {
+  max-width: 100%;
+  object-fit: cover;
+  overflow: hidden;
 }
 </style>

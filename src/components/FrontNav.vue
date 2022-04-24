@@ -1,6 +1,6 @@
 <template>
   <nav
-    class="navbar navbar-expand navbar-light bg-light shadow-sm sticky-top"
+    class="navbar navbar-expand navbar-light shadow-sm sticky-top bg-light"
     style="z-index: 10"
   >
     <div class="container justify-content-end">
@@ -27,7 +27,7 @@
         <router-link to="/favorite" class="nav-link position-relative"
           ><i class="bi bi-suit-heart"></i>
           <span
-            class="position-absolute translate-middle badge rounded-pill bg-primary"
+            class="position-absolute translate-middle badge rounded-pill bg-info"
             >{{ favoriteItems.length }}
           </span>
         </router-link>
@@ -36,7 +36,7 @@
         <router-link to="/cart" class="nav-link position-relative"
           ><i class="bi bi-cart3"></i>
           <span
-            class="position-absolute translate-middle badge rounded-pill bg-primary"
+            class="position-absolute translate-middle badge rounded-pill bg-info"
             >{{ cartData.carts.length }}
           </span>
         </router-link>

@@ -1,6 +1,13 @@
 <template>
   <section class="section-top mb-5">
-    <div class="bg-top banner-favorite pic"></div>
+    <div class="bg-top banner-favorite pic">
+      <div class="text-center w-100 h-100 mask z-index-3 position-relative">
+        <div class="position-absolute top-50 start-50 translate-middle">
+          <h2>願望清單</h2>
+          <p>My Whishlist</p>
+        </div>
+      </div>
+    </div>
   </section>
   <main class="container mb-5">
     <section class="bg-primary text-white p-2">
@@ -39,7 +46,9 @@
               <p class="h5 d-inline d-lg-block">NT${{ item.price }}</p>
             </div>
             <div v-else>
-              <p class="h5 d-inline d-lg-block">NT${{ item.price }}&nbsp;</p>
+              <p class="h5 d-inline d-lg-block text-info fw-bold">
+                NT${{ item.price }}&nbsp;
+              </p>
               <small class="text-decoration-line-through fw-light"
                 >NT${{ item.origin_price }}</small
               >
@@ -48,7 +57,7 @@
           <td class="col-6 col-md-3 order-md-3 order-4 z-index-3 px-lg-5">
             <button
               type="button"
-              class="btn bg-primary w-100"
+              class="btn btn-info w-100"
               @click="addToCart(item.id)"
               :disabled="isLoadingItem === item.id"
             >
@@ -70,7 +79,7 @@
             <button
               type="button"
               class="cancel del-item"
-              @click="delfavoriteItem(item.id)"
+              @click="openDelModal(item.id)"
               :disabled="isLoadingItem === item.id"
             >
               <i class="bi bi-trash-fill fs-5"></i>
@@ -98,6 +107,11 @@
   <ServiceList />
   <SuccessToast ref="SuccessToast" :message="toastMessage"></SuccessToast>
   <ErrorToast ref="ErrorToast" :message="toastMessage"></ErrorToast>
+  <DelModal
+    ref="DelModal"
+    @del-item="delfavoriteItem"
+    :title="delteTitle"
+  ></DelModal>
   <Loading ref="Loading"> </Loading>
 </template>
 
@@ -107,6 +121,7 @@ import Loading from '@/components/LoadingView.vue'
 import SuccessToast from '@/components/SuccessToast.vue'
 import ErrorToast from '@/components/ErrorToast.vue'
 import ServiceList from '@/components/ServiceList.vue'
+import DelModal from '@/components/Modal/DelModal.vue'
 export default {
   name: 'FavoriteView',
   data () {
@@ -114,14 +129,17 @@ export default {
       favoriteItems: JSON.parse(localStorage.getItem('favorite')) || [],
       products: [],
       toastMessage: '',
-      isLoadingItem: ''
+      isLoadingItem: '',
+      delteCartId: {},
+      delteTitle: ''
     }
   },
   components: {
     Loading,
     SuccessToast,
     ErrorToast,
-    ServiceList
+    ServiceList,
+    DelModal
   },
   methods: {
     addToCart (id, qty = 1) {
@@ -165,12 +183,29 @@ export default {
         this.getProduct(item)
       })
     },
-    delfavoriteItem (id) {
-      this.isLoadingItem = id
-      const favIndex = this.favoriteItems.findIndex((item) => item === id)
+    openDelModal (id) {
+      const api = `${process.env.VUE_APP_API}/api/${process.env.VUE_APP_PATH}/product/${id}`
+      this.$http(api)
+        .then((res) => {
+          this.delteCartId = res.data.product.id
+          this.delteTitle = res.data.product.title
+          const DelModal = this.$refs.DelModal
+          DelModal.openModal()
+        })
+        .catch(() => {
+          this.toastMessage = '發生錯誤，請重新再操作一次'
+          this.$refs.ErrorToast.openToasts()
+        })
+    },
+    delfavoriteItem () {
+      this.isLoadingItem = this.delteCartId
+      const favIndex = this.favoriteItems.findIndex(
+        (item) => item === this.delteCartId
+      )
       this.favoriteItems.splice(favIndex, 1)
       this.getFavorites()
       emitter.emit('get-favorites', this.favoriteItems)
+      this.$refs.DelModal.hideModal()
       setTimeout(() => {
         this.isLoadingItem = ''
       }, 1500)
@@ -195,7 +230,6 @@ export default {
   background-image: url('@/assets/img/banner/banner-favrite.png');
 }
 
-/*table*/
 @media screen and (max-width: 768px) {
   .thead,
   thead {
@@ -213,12 +247,6 @@ export default {
   border-bottom: 1px solid #d5d5d5;
 }
 
-.btn-delete-all {
-  background-color: #fff;
-  border: 1px solid #eaeaea;
-  color: #839ea9;
-}
-
 @media screen and (max-width: 768px) {
   .favorite .del-item {
     position: absolute;
@@ -233,5 +261,9 @@ export default {
 
 .favorite .bi-emoji-frown {
   font-size: 5rem;
+}
+
+td .btn {
+  background-color: #d17028;
 }
 </style>

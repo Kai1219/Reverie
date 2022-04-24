@@ -100,7 +100,6 @@ export default {
   border: 10px solid #fff;
   box-shadow: 0 0 3.75rem #000;
   backdrop-filter: blur(0.3rem);
-  /*模糊背景*/
   padding: 1.5rem;
 }
 
@@ -108,6 +107,7 @@ export default {
   color: #fff;
   width: 25rem;
 }
+
 @media screen and (max-width: 576px) {
   .form {
     width: 20rem;

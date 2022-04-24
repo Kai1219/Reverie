@@ -56,7 +56,7 @@ const routes = [
         }
       },
       {
-        path: 'paid',
+        path: 'paid/:id',
         name: 'paid',
         component: () => import('../views/PaidOrder.vue'),
         meta: {
@@ -91,6 +91,11 @@ const routes = [
         component: () => import('../views/Dashboard/AdminCoupon.vue')
       }
     ]
+  },
+  {
+    path: '/:pathMatch(.*)*',
+    name: 'NotFound',
+    component: () => import('../views/NotFound.vue')
   }
 ]
 

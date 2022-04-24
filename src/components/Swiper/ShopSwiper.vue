@@ -1,5 +1,5 @@
 <template>
-  <swiper
+  <Swiper
     ref="{swiperRef}"
     :slidesPerView="2"
     :spaceBetween="30"
@@ -20,12 +20,12 @@
     }"
     class="mySwiper shop-swiper"
   >
-    <swiper-slide
+    <SwiperSlide
       v-for="product in swiperProducts"
       :key="product.id"
       class="align-items-center"
     >
-      <div class="card-product w-100 hover-line">
+      <div class="card-product w-100 border">
         <router-link
           :to="`/product/${product.id}`"
           class="hover-scale text-decoration-none text-dark"
@@ -41,7 +41,7 @@
               <p class="fs-6 d-inline">NT${{ product.price }}</p>
             </div>
             <div v-else>
-              <p class="d-inline text-danger fw-bold fs-5">
+              <p class="d-inline text-info fw-bold fs-5">
                 NT${{ product.price }}&nbsp;
               </p>
               <span class="text-decoration-line-through fw-light fs-6"
@@ -53,11 +53,11 @@
         <div class="btn-group mt-2 w-100 border border-primary">
           <button
             type="button"
-            class="btn text-dark w-25 btn-hover"
+            class="btn w-25"
             @click="toggleFavorite(product.id)"
           >
             <i
-              class="bi bi-heart-fill fs-3 text-danger"
+              class="bi bi-heart-fill fs-3 text-info"
               v-if="favoriteItems.includes(product.id)"
             ></i>
             <i class="bi bi-heart fs-3" v-else></i>
@@ -73,7 +73,7 @@
               v-if="isLoadingItem === product.id"
             >
               <span
-                class="spinner-border me-2 d-none d-sm-block"
+                class="spinner-border me-2 d-none d-md-block"
                 role="status"
                 aria-hidden="true"
               ></span>
@@ -83,8 +83,8 @@
           </button>
         </div>
       </div>
-    </swiper-slide>
-  </swiper>
+    </SwiperSlide>
+  </Swiper>
 </template>
 
 <script>
@@ -133,7 +133,6 @@ export default {
   watch: {
     favoriteItems: {
       handler () {
-        // localStorage的自訂欄位,要存入的JSON內容
         localStorage.setItem('favorite', JSON.stringify(this.favoriteItems))
       },
       deep: true
@@ -148,10 +147,6 @@ export default {
 </script>
 
 <style lang="scss">
-.card-product .pic img {
-  max-width: 100%;
-  object-fit: cover;
-}
 .products .price {
   align-items: center;
 }
@@ -171,8 +166,8 @@ export default {
 .swiper-button-next {
   width: 50px;
   height: 50px;
-  background-color: #839ea9;
-  border: 1px solid #839ea9;
+  background-color: #313c3e;
+  border: 1px solid #313c3e;
   border-radius: 50%;
   color: #fff;
   font-size: 1rem;
