@@ -85,4 +85,8 @@ html {
   object-fit: cover;
   overflow: hidden;
 }
+
+.mask {
+  background-color: #e7e7e796;
+}
 </style>

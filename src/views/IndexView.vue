@@ -326,10 +326,6 @@ export default {
   height: 55vh;
 }
 
-.mask {
-  background-color: #e7e7e796;
-}
-
 .vlr {
   writing-mode: vertical-lr;
 }
