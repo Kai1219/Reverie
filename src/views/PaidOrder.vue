@@ -24,7 +24,7 @@
       </ol>
     </section>
     <section>
-      <div class="thank-text p-5 m-1 d-flex flex-column align-items-center">
+      <div class="thank-text pt-5 p-4 m-1 d-flex flex-column align-items-center">
         <h2 v-if="orderData.is_paid" class="text-success">付款完成!</h2>
         <h2 v-else>訂購完成!!</h2>
         <p>
@@ -32,18 +32,7 @@
             orderData.user.name
           }}先生/小姐，感謝您的購買，Reverie白日夢會繼續努力推出更美味的甜點!
         </p>
-        <p>以下為您訂購資訊</p>
-
-        <span v-if="orderData.is_paid"
-          ><router-link to="/" class="btn btn-primary"
-            >回到首頁</router-link
-          ></span
-        >
-        <span v-else
-          ><button type="button" class="btn btn-info" @click="goPaid()">
-            確定付款
-          </button></span
-        >
+        <p>以下為您訂購資訊:</p>
       </div>
     </section>
     <section class="mt-5">
@@ -157,6 +146,16 @@
                   </tr>
                 </tbody>
               </table>
+            </div>
+          </div>
+          <div class="d-flex justify-content-center p-5">
+            <div v-if="orderData.is_paid">
+              <router-link to="/" class="btn btn-primary">回到首頁</router-link>
+            </div>
+            <div v-else>
+              <button type="button" class="btn btn-info" @click="goPaid()">
+                確定付款
+              </button>
             </div>
           </div>
         </div>
